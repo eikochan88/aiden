@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Aiden AI社員ダッシュボード{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/static/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- モバイル用ヘッダー -->
+<header class="mobile-header d-flex d-lg-none align-items-center px-3">
+  <button class="btn btn-link text-white p-0 me-3" id="sidebarToggle">
+    <i class="bi bi-list fs-4"></i>
+  </button>
+  <span class="fw-bold text-white">Aiden AI社員</span>
+</header>
+
+<!-- サイドバーオーバーレイ -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- サイドバー -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <div class="company-icon">A</div>
+      <div>
+        <div class="company-name">Aiden</div>
+        <div class="company-sub">AI社員ダッシュボード</div>
+      </div>
+    </div>
+    <div class="owner-badge mt-2">
+      <i class="bi bi-crown-fill me-1"></i>栄子会長
+    </div>
+  </div>
+
+  <div class="sidebar-menu">
+    <a href="{{ url_for('dashboard') }}" class="sidebar-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
+      <i class="bi bi-grid-1x2-fill"></i> ダッシュボード
+    </a>
+    <a href="{{ url_for('reports') }}" class="sidebar-item {% if request.endpoint in ['reports','report_detail'] %}active{% endif %}">
+      <i class="bi bi-file-earmark-text-fill"></i> レポート
+    </a>
+    <a href="{{ url_for('tasks') }}" class="sidebar-item {% if request.endpoint == 'tasks' %}active{% endif %}">
+      <i class="bi bi-check2-square"></i> タスク管理
+    </a>
+
+    <div class="sidebar-section-label">AI社員</div>
+    {% for emp in all_employees %}
+    <a href="{{ url_for('chat', employee_id=emp.id) }}"
+       class="sidebar-item emp-item {% if request.endpoint == 'chat' and request.view_args.employee_id == emp.id %}active{% endif %}"
+       style="--emp-color: {{ emp.color }}">
+      <span class="emp-dot" style="background:{{ emp.color }}"></span>
+      {{ emp.emoji }} {{ emp.name }}
+      <span class="emp-title-small">{{ emp.title }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</nav>
+
+<!-- メインコンテンツ -->
+<main class="main-content">
+  {% block content %}{% endblock %}
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// サイドバートグル（モバイル）
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+const toggleBtn = document.getElementById('sidebarToggle');
+if (toggleBtn) {
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+}
+if (overlay) {
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+}
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}レポート | Aiden{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">レポート・ドキュメント</h1>
+    <p class="page-sub">AI社員が生成したすべてのドキュメント</p>
+  </div>
+</div>
+
+<!-- フィルター -->
+<div class="filter-bar mb-4">
+  <span class="filter-label">絞り込み：</span>
+  <a href="{{ url_for('reports') }}"
+     class="filter-btn {% if not selected_employee %}active{% endif %}">すべて</a>
+  {% for emp in employees %}
+  <a href="{{ url_for('reports', employee_id=emp.id) }}"
+     class="filter-btn {% if selected_employee == emp.id %}active{% endif %}"
+     style="--fc:{{ emp.color }}">
+    {{ emp.emoji }} {{ emp.name }}
+  </a>
+  {% endfor %}
+</div>
+
+{% if reports %}
+<div class="row g-3">
+  {% for r in reports %}
+  {% set emp = employees | selectattr('id','eq',r.employee_id) | first %}
+  <div class="col-12 col-md-6 col-xl-4">
+    <div class="report-card">
+      <div class="report-card-header" style="background:{% if emp %}{{ emp.light }}{% else %}#f1f5f9{% endif %}">
+        <span class="report-emp-emoji">{% if emp %}{{ emp.emoji }}{% else %}📄{% endif %}</span>
+        <div>
+          <div class="report-emp-name" style="color:{% if emp %}{{ emp.color }}{% else %}#64748b{% endif %}">
+            {% if emp %}{{ emp.name }}{% else %}不明{% endif %}
+          </div>
+          <div class="report-type">{{ r.report_type }}</div>
+        </div>
+        <div class="report-date ms-auto">{{ r.created_at.strftime('%m/%d') }}</div>
+      </div>
+      <div class="report-card-body">
+        <h5 class="report-title">{{ r.title }}</h5>
+        <p class="report-preview">{{ r.content[:100] }}...</p>
+      </div>
+      <div class="report-card-footer">
+        <a href="{{ url_for('report_detail', report_id=r.id) }}" class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-eye me-1"></i>全文を見る
+        </a>
+        <button class="btn btn-sm btn-outline-danger btn-delete-report"
+                data-report-id="{{ r.id }}">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <i class="bi bi-file-earmark-text"></i>
+  <p>まだレポートがありません。<br>各AI社員のチャット画面からレポートを生成できます。</p>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-primary">ダッシュボードへ</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.querySelectorAll('.btn-delete-report').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    if (!confirm('このレポートを削除しますか？')) return;
+    const id = btn.dataset.reportId;
+    await fetch(`/api/report/${id}/delete`, {method: 'POST'});
+    btn.closest('.col-12').remove();
+  });
+});
+</script>
+{% endblock %}

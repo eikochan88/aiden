@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}タスク管理 | Aiden{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">タスク管理</h1>
+    <p class="page-sub">栄子会長からAI社員への指示・タスク</p>
+  </div>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+    <i class="bi bi-plus-circle me-1"></i>タスクを追加
+  </button>
+</div>
+
+<!-- カンバンボード -->
+<div class="kanban-board">
+  {% for status, label, color in [('pending','未対応','#f59e0b'),('in_progress','対応中','#3b82f6'),('done','完了','#10b981')] %}
+  <div class="kanban-col">
+    <div class="kanban-col-header" style="border-top:3px solid {{ color }}">
+      <span>{{ label }}</span>
+      <span class="kanban-count">
+        {{ tasks | selectattr('status','eq',status) | list | length }}
+      </span>
+    </div>
+    {% for task in tasks | selectattr('status','eq',status) | list %}
+    {% set emp = employees | selectattr('id','eq',task.assigned_to) | first %}
+    <div class="kanban-card">
+      <div class="kanban-card-top">
+        <span class="priority-badge priority-{{ task.priority }}">{{ task.priority }}</span>
+        {% if emp %}
+        <span class="kanban-emp" style="color:{{ emp.color }}">{{ emp.emoji }} {{ emp.name }}</span>
+        {% endif %}
+      </div>
+      <p class="kanban-title">{{ task.title }}</p>
+      {% if task.description %}
+      <p class="kanban-desc">{{ task.description }}</p>
+      {% endif %}
+      <div class="kanban-actions">
+        {% if status == 'pending' %}
+        <button class="btn btn-xs btn-primary task-status-btn"
+                data-task-id="{{ task.id }}" data-status="in_progress">対応中に→</button>
+        {% elif status == 'in_progress' %}
+        <button class="btn btn-xs btn-success task-status-btn"
+                data-task-id="{{ task.id }}" data-status="done">完了に→</button>
+        {% endif %}
+        <button class="btn btn-xs btn-outline-danger task-delete-btn"
+                data-task-id="{{ task.id }}">削除</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+
+<!-- タスク追加モーダル -->
+<div class="modal fade" id="addTaskModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>タスクを追加</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label fw-bold">タスク名 <span class="text-danger">*</span></label>
+          <input type="text" id="taskTitle" class="form-control" placeholder="例：今週の提案書を作成する">
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">詳細</label>
+          <textarea id="taskDesc" class="form-control" rows="3" placeholder="詳細な指示があれば記入"></textarea>
+        </div>
+        <div class="row g-3">
+          <div class="col-6">
+            <label class="form-label fw-bold">担当AI社員</label>
+            <select id="taskAssigned" class="form-select">
+              <option value="">未割り当て</option>
+              {% for emp in employees %}
+              <option value="{{ emp.id }}">{{ emp.emoji }} {{ emp.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-bold">優先度</label>
+            <select id="taskPriority" class="form-select">
+              <option value="high">🔴 高</option>
+              <option value="medium" selected>🟡 中</option>
+              <option value="low">🟢 低</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-primary" id="saveTaskBtn">
+          <i class="bi bi-plus-circle me-1"></i>追加する
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// タスク追加
+document.getElementById('saveTaskBtn').addEventListener('click', async () => {
+  const title = document.getElementById('taskTitle').value.trim();
+  if (!title) { alert('タスク名を入力してください'); return; }
+
+  await fetch('/api/tasks', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      title,
+      description: document.getElementById('taskDesc').value,
+      assigned_to: document.getElementById('taskAssigned').value,
+      priority: document.getElementById('taskPriority').value,
+    }),
+  });
+  location.reload();
+});
+
+// ステータス変更
+document.querySelectorAll('.task-status-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    await fetch(`/api/tasks/${btn.dataset.taskId}/status`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({status: btn.dataset.status}),
+    });
+    location.reload();
+  });
+});
+
+// タスク削除
+document.querySelectorAll('.task-delete-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    if (!confirm('削除しますか？')) return;
+    await fetch(`/api/tasks/${btn.dataset.taskId}/delete`, {method: 'POST'});
+    location.reload();
+  });
+});
+</script>
+{% endblock %}

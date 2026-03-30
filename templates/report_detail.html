@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ report.title }} | Aiden{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <a href="{{ url_for('reports') }}" class="btn btn-sm btn-outline-secondary mb-2">
+      <i class="bi bi-arrow-left me-1"></i>レポート一覧
+    </a>
+    <h1 class="page-title">{{ report.title }}</h1>
+    <p class="page-sub">
+      {% if emp %}{{ emp.emoji }} {{ emp.name }}{% endif %}
+      ／ {{ report.created_at.strftime('%Y年%m月%d日 %H:%M') }}
+    </p>
+  </div>
+  <div class="d-flex gap-2">
+    <button class="btn btn-outline-secondary btn-sm" onclick="copyReport()">
+      <i class="bi bi-clipboard me-1"></i>コピー
+    </button>
+    {% if emp %}
+    <a href="{{ url_for('chat', employee_id=emp.id) }}" class="btn btn-sm"
+       style="background:{{ emp.color }};color:white">
+      <i class="bi bi-chat-dots me-1"></i>{{ emp.name }}に追加依頼
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="report-full-card">
+  <pre id="reportBody" class="report-pre-full">{{ report.content }}</pre>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyReport() {
+  const text = document.getElementById('reportBody').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('コピーしました！');
+  });
+}
+</script>
+{% endblock %}

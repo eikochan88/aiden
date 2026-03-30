@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+{% block title %}{{ emp.name }} | Aiden{% endblock %}
+
+{% block content %}
+<div class="chat-layout">
+
+  <!-- チャットヘッダー -->
+  <div class="chat-header" style="border-bottom: 3px solid {{ emp.color }}">
+    <div class="d-flex align-items-center gap-3">
+      <div class="chat-avatar" style="background:{{ emp.color }}">{{ emp.emoji }}</div>
+      <div>
+        <div class="chat-emp-name">{{ emp.name }}</div>
+        <div class="chat-emp-title">{{ emp.title }} ／ {{ emp.department }}部</div>
+      </div>
+    </div>
+    <div class="d-flex gap-2">
+      <!-- クイックレポートボタン -->
+      {% if emp.reports %}
+      <div class="dropdown">
+        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+          <i class="bi bi-lightning me-1"></i>レポート生成
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          {% for rpt in emp.reports %}
+          <li>
+            <button class="dropdown-item btn-generate-report"
+                    data-employee-id="{{ emp.id }}"
+                    data-report-key="{{ rpt.key }}"
+                    data-report-label="{{ rpt.label }}">
+              {{ rpt.label }}
+            </button>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      <button class="btn btn-sm btn-outline-danger" id="clearBtn" title="会話履歴を削除">
+        <i class="bi bi-trash"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- メッセージエリア -->
+  <div class="chat-messages" id="chatMessages">
+    {% if not messages %}
+    <div class="chat-welcome">
+      <div class="welcome-avatar" style="background:{{ emp.color }}">{{ emp.emoji }}</div>
+      <h4>{{ emp.name }}</h4>
+      <p>{{ emp.title }}</p>
+      <p class="text-muted small mt-2">{{ emp.desc }}</p>
+      <p class="text-muted small">何でもお気軽にどうぞ！</p>
+    </div>
+    {% else %}
+    {% for msg in messages %}
+    <div class="msg-row {% if msg.sender == 'user' %}msg-user{% else %}msg-ai{% endif %}">
+      {% if msg.sender == 'ai' %}
+      <div class="msg-avatar" style="background:{{ emp.color }}">{{ emp.emoji }}</div>
+      {% endif %}
+      <div class="msg-bubble {% if msg.sender == 'user' %}bubble-user{% else %}bubble-ai{% endif %}"
+           style="{% if msg.sender == 'ai' %}--bubble-border:{{ emp.color }}{% endif %}">
+        <div class="msg-text">{{ msg.content }}</div>
+        <div class="msg-time">{{ msg.created_at.strftime('%H:%M') }}</div>
+      </div>
+      {% if msg.sender == 'user' %}
+      <div class="msg-avatar msg-avatar-user">栄</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- AI入力中インジケーター -->
+    <div class="msg-row msg-ai d-none" id="typingIndicator">
+      <div class="msg-avatar" style="background:{{ emp.color }}">{{ emp.emoji }}</div>
+      <div class="msg-bubble bubble-ai typing-bubble">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 入力エリア -->
+  <div class="chat-input-area">
+    <div class="chat-input-wrap">
+      <textarea id="chatInput" class="chat-textarea" placeholder="{{ emp.name }}に話しかける..."
+                rows="1"></textarea>
+      <button id="sendBtn" class="send-btn" style="background:{{ emp.color }}">
+        <i class="bi bi-send-fill"></i>
+      </button>
+    </div>
+    <div class="chat-hints">
+      <span>例：</span>
+      {% if emp.id == 'oyama' %}
+      <button class="hint-btn" onclick="setInput('今日の日次報告書を作って')">日次報告書</button>
+      <button class="hint-btn" onclick="setInput('今週の戦略を教えて')">戦略相談</button>
+      {% elif emp.id == 'ishida' %}
+      <button class="hint-btn" onclick="setInput('週次議事録を作って')">週次議事録</button>
+      <button class="hint-btn" onclick="setInput('進捗を確認して')">進捗確認</button>
+      {% elif emp.id == 'kimura' %}
+      <button class="hint-btn" onclick="setInput('提案書を作って')">提案書作成</button>
+      <button class="hint-btn" onclick="setInput('新規顧客へのアプローチ方法を教えて')">営業相談</button>
+      {% elif emp.id == 'tanaka' %}
+      <button class="hint-btn" onclick="setInput('開発進捗を報告して')">進捗報告</button>
+      <button class="hint-btn" onclick="setInput('技術仕様書を作って')">技術仕様書</button>
+      {% elif emp.id == 'nakai' %}
+      <button class="hint-btn" onclick="setInput('請求書を作って')">請求書作成</button>
+      <button class="hint-btn" onclick="setInput('今月の財務状況を教えて')">財務確認</button>
+      {% elif emp.id == 'yamamoto' %}
+      <button class="hint-btn" onclick="setInput('今週のSNS投稿を5本作って')">SNS投稿</button>
+      <button class="hint-btn" onclick="setInput('ブログ記事を書いて')">ブログ記事</button>
+      {% elif emp.id == 'hayashi' %}
+      <button class="hint-btn" onclick="setInput('業務委託契約書を作って')">契約書作成</button>
+      <button class="hint-btn" onclick="setInput('社内マニュアルを作って')">マニュアル</button>
+      {% elif emp.id == 'ueda' %}
+      <button class="hint-btn" onclick="setInput('よくある問い合わせへの返答を作って')">FAQ作成</button>
+      <button class="hint-btn" onclick="setInput('CS週次レポートを作って')">CSレポート</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- レポート生成モーダル -->
+<div class="modal fade" id="reportModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="border-top:4px solid {{ emp.color }}">
+        <h5 class="modal-title" id="reportModalTitle">生成中...</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="reportLoading" class="text-center py-5">
+          <div class="spinner-border" style="color:{{ emp.color }}" role="status"></div>
+          <p class="mt-3 text-muted">{{ emp.name }}が作成中です...</p>
+        </div>
+        <pre id="reportContent" class="report-pre d-none"></pre>
+      </div>
+      <div class="modal-footer">
+        <a id="reportViewBtn" href="#" class="btn btn-primary d-none">詳細を見る</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const empId = "{{ emp.id }}";
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+const sendBtn = document.getElementById('sendBtn');
+const typingIndicator = document.getElementById('typingIndicator');
+
+// 最下部にスクロール
+function scrollToBottom() {
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+scrollToBottom();
+
+// ヒントボタン
+function setInput(text) {
+  chatInput.value = text;
+  chatInput.focus();
+  autoResize();
+}
+
+// テキストエリア自動リサイズ
+function autoResize() {
+  chatInput.style.height = 'auto';
+  chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+}
+chatInput.addEventListener('input', autoResize);
+
+// メッセージ追加
+function addMessage(sender, text, time) {
+  const isUser = sender === 'user';
+  const empColor = "{{ emp.color }}";
+  const empEmoji = "{{ emp.emoji }}";
+
+  const row = document.createElement('div');
+  row.className = `msg-row ${isUser ? 'msg-user' : 'msg-ai'}`;
+
+  if (!isUser) {
+    row.innerHTML = `
+      <div class="msg-avatar" style="background:${empColor}">${empEmoji}</div>
+      <div class="msg-bubble bubble-ai" style="--bubble-border:${empColor}">
+        <div class="msg-text">${text.replace(/\n/g, '<br>')}</div>
+        <div class="msg-time">${time}</div>
+      </div>`;
+  } else {
+    row.innerHTML = `
+      <div class="msg-bubble bubble-user">
+        <div class="msg-text">${text.replace(/\n/g, '<br>')}</div>
+        <div class="msg-time">${time}</div>
+      </div>
+      <div class="msg-avatar msg-avatar-user">栄</div>`;
+  }
+
+  typingIndicator.before(row);
+  scrollToBottom();
+}
+
+// メッセージ送信
+async function sendMessage() {
+  const text = chatInput.value.trim();
+  if (!text) return;
+
+  const now = new Date();
+  const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  addMessage('user', text, time);
+  chatInput.value = '';
+  chatInput.style.height = 'auto';
+  sendBtn.disabled = true;
+
+  // 入力中表示
+  typingIndicator.classList.remove('d-none');
+  scrollToBottom();
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({employee_id: empId, message: text}),
+    });
+    const data = await res.json();
+    typingIndicator.classList.add('d-none');
+    addMessage('ai', data.reply, data.timestamp);
+  } catch(e) {
+    typingIndicator.classList.add('d-none');
+    addMessage('ai', 'エラーが発生しました。再度お試しください。', time);
+  }
+  sendBtn.disabled = false;
+  chatInput.focus();
+}
+
+sendBtn.addEventListener('click', sendMessage);
+chatInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+
+// 履歴クリア
+document.getElementById('clearBtn').addEventListener('click', async () => {
+  if (!confirm('会話履歴を全て削除しますか？')) return;
+  await fetch(`/api/chat/${empId}/clear`, {method: 'POST'});
+  location.reload();
+});
+
+// レポート生成
+document.querySelectorAll('.btn-generate-report').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const key   = btn.dataset.reportKey;
+    const label = btn.dataset.reportLabel;
+
+    document.getElementById('reportModalTitle').textContent = label;
+    document.getElementById('reportLoading').classList.remove('d-none');
+    document.getElementById('reportContent').classList.add('d-none');
+    document.getElementById('reportViewBtn').classList.add('d-none');
+
+    const modal = new bootstrap.Modal(document.getElementById('reportModal'));
+    modal.show();
+
+    const res = await fetch('/api/report/generate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({employee_id: empId, report_key: key}),
+    });
+    const data = await res.json();
+
+    document.getElementById('reportModalTitle').textContent = data.title;
+    document.getElementById('reportLoading').classList.add('d-none');
+    document.getElementById('reportContent').textContent = data.content;
+    document.getElementById('reportContent').classList.remove('d-none');
+
+    const viewBtn = document.getElementById('reportViewBtn');
+    viewBtn.href = '/reports/' + data.report_id;
+    viewBtn.classList.remove('d-none');
+  });
+});
+</script>
+{% endblock %}
