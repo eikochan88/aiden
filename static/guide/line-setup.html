@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LINE セットアップガイド | Aiden</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    body { background: #f8f9fa; font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif; }
+    .hero { background: linear-gradient(135deg, #06C755 0%, #059142 100%); color: white; padding: 48px 24px; text-align: center; }
+    .hero .icon { font-size: 64px; margin-bottom: 16px; }
+    .card-guide { background: white; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .step-num { background: #06C755; color: white; width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; flex-shrink: 0; }
+    .step-header { display: flex; align-items: center; margin-bottom: 12px; }
+    code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: .9em; }
+    .alert-tip { background: #f0fff4; border-left: 4px solid #06C755; padding: 12px 16px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+<div class="hero">
+  <div class="icon">⚙️</div>
+  <h1 class="h2 fw-bold mb-2">LINE セットアップガイド</h1>
+  <p class="mb-0 opacity-75">LINE公式アカウントとBotの初期設定手順</p>
+</div>
+
+<div class="container py-4" style="max-width:720px">
+
+  <div class="card-guide">
+    <div class="step-header"><span class="step-num">1</span><h5 class="fw-bold mb-0">LINE Developersへのアクセス</h5></div>
+    <ol class="ps-3">
+      <li class="mb-2">LINE Developersコンソールにログイン</li>
+      <li class="mb-2">プロバイダーを作成（または既存のものを選択）</li>
+      <li class="mb-2">新規チャネル → Messaging API を選択</li>
+    </ol>
+  </div>
+
+  <div class="card-guide">
+    <div class="step-header"><span class="step-num">2</span><h5 class="fw-bold mb-0">チャネルの設定</h5></div>
+    <table class="table table-bordered table-sm">
+      <thead class="table-success">
+        <tr><th>設定項目</th><th>内容</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>チャネル名</td><td>アカウント名（公開される）</td></tr>
+        <tr><td>チャネル説明</td><td>サービスの簡単な説明</td></tr>
+        <tr><td>大業種 / 小業種</td><td>ビジネスに合ったカテゴリ</td></tr>
+        <tr><td>メールアドレス</td><td>管理者のメールアドレス</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card-guide">
+    <div class="step-header"><span class="step-num">3</span><h5 class="fw-bold mb-0">アクセストークンの取得</h5></div>
+    <ol class="ps-3">
+      <li class="mb-2">チャネル設定 → Messaging API設定タブを開く</li>
+      <li class="mb-2">「チャネルアクセストークン（長期）」を発行</li>
+      <li class="mb-2">トークンをコピーし、安全な場所に保管</li>
+    </ol>
+    <div class="alert-tip mt-3">
+      <i class="bi bi-shield-lock-fill me-2" style="color:#06C755"></i>
+      <strong>チャネルシークレット</strong>と<strong>アクセストークン</strong>の2つが必要です。
+    </div>
+  </div>
+
+  <div class="card-guide">
+    <div class="step-header"><span class="step-num">4</span><h5 class="fw-bold mb-0">Webhook URLの設定</h5></div>
+    <ol class="ps-3">
+      <li class="mb-2">Messaging API設定 → Webhook設定</li>
+      <li class="mb-2">Webhook URL欄に以下を入力：<br>
+        <code>https://aiden-1e0e.onrender.com/webhook</code>
+      </li>
+      <li class="mb-2">「検証」ボタンで疎通確認</li>
+      <li class="mb-2">「Webhookの利用」をオンにする</li>
+    </ol>
+  </div>
+
+  <div class="card-guide">
+    <div class="step-header"><span class="step-num">5</span><h5 class="fw-bold mb-0">応答設定</h5></div>
+    <ul class="list-unstyled">
+      <li class="mb-2"><i class="bi bi-toggle-on text-success me-2"></i>応答メッセージ：<strong>オフ</strong>（Bot側で制御するため）</li>
+      <li class="mb-2"><i class="bi bi-toggle-on text-success me-2"></i>Webhook：<strong>オン</strong></li>
+      <li class="mb-2"><i class="bi bi-toggle-off text-secondary me-2"></i>あいさつメッセージ：任意</li>
+    </ul>
+  </div>
+
+  <div class="card-guide">
+    <h5 class="fw-bold mb-3"><i class="bi bi-check2-circle text-success me-2"></i>設定完了チェックリスト</h5>
+    <ul class="list-unstyled">
+      <li class="mb-2"><input type="checkbox" class="form-check-input me-2">チャネルアクセストークン取得済み</li>
+      <li class="mb-2"><input type="checkbox" class="form-check-input me-2">チャネルシークレット取得済み</li>
+      <li class="mb-2"><input type="checkbox" class="form-check-input me-2">Webhook URL設定・検証済み</li>
+      <li class="mb-2"><input type="checkbox" class="form-check-input me-2">テストメッセージで動作確認済み</li>
+    </ul>
+    <a href="/guide/line-bot" class="btn btn-success btn-sm mt-2">次：LINE Bot使い方ガイドへ</a>
+  </div>
+
+</div>
+</body>
+</html>

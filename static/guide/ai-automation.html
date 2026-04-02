@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI自動化ガイド | Aiden</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    body { background: #f8f9fa; font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif; }
+    .hero { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color: white; padding: 48px 24px; text-align: center; }
+    .hero .icon { font-size: 64px; margin-bottom: 16px; }
+    .card-guide { background: white; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .step-num { background: #0ea5e9; color: white; width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; }
+    .feature-icon { font-size: 2rem; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+<div class="hero">
+  <div class="icon">🤖</div>
+  <h1 class="h2 fw-bold mb-2">AI 自動化ガイド</h1>
+  <p class="mb-0 opacity-75">Aidenで実現できる業務自動化をご紹介します</p>
+</div>
+
+<div class="container py-4" style="max-width:720px">
+
+  <div class="card-guide">
+    <h5 class="fw-bold mb-3">自動化できる業務一覧</h5>
+    <div class="row g-3">
+      <div class="col-6">
+        <div class="bg-light rounded p-3 text-center h-100">
+          <div class="feature-icon">💬</div>
+          <div class="fw-bold small">LINE自動返信</div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="bg-light rounded p-3 text-center h-100">
+          <div class="feature-icon">📊</div>
+          <div class="fw-bold small">レポート自動生成</div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="bg-light rounded p-3 text-center h-100">
+          <div class="feature-icon">📅</div>
+          <div class="fw-bold small">タスク管理</div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="bg-light rounded p-3 text-center h-100">
+          <div class="feature-icon">📱</div>
+          <div class="fw-bold small">SNS投稿文生成</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-guide">
+    <h5 class="fw-bold mb-3"><span class="step-num">1</span>LINE自動応答の設定</h5>
+    <p>LINE Botと連携することで、お客様からの問い合わせに24時間自動で返答します。</p>
+    <a href="/guide/line-bot" class="btn btn-sm btn-outline-primary">LINE Botガイドへ</a>
+  </div>
+
+  <div class="card-guide">
+    <h5 class="fw-bold mb-3"><span class="step-num">2</span>レポート自動生成</h5>
+    <p>AI社員が会話内容を分析し、日報・週報・分析レポートを自動作成します。ダッシュボードからワンクリックで生成できます。</p>
+  </div>
+
+  <div class="card-guide">
+    <h5 class="fw-bold mb-3"><span class="step-num">3</span>外部ツール連携</h5>
+    <ul class="list-unstyled">
+      <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>Zapier / Make（旧Integromat）</li>
+      <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>Google Sheets・スプレッドシート</li>
+      <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>Stripe 決済連携</li>
+      <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>カレンダー予約システム</li>
+    </ul>
+    <a href="/guide/stripe" class="btn btn-sm btn-outline-success">Stripe連携ガイドへ</a>
+  </div>
+
+</div>
+</body>
+</html>

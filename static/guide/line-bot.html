@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LINE Bot 使い方ガイド | Aiden</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    body { background: #f8f9fa; font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif; }
+    .hero { background: linear-gradient(135deg, #06C755 0%, #00A040 100%); color: white; padding: 48px 24px; text-align: center; }
+    .hero .icon { font-size: 64px; margin-bottom: 16px; }
+    .step-card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .step-num { background: #06C755; color: white; width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; }
+    .badge-line { background: #06C755; color: white; }
+  </style>
+</head>
+<body>
+<div class="hero">
+  <div class="icon">💬</div>
+  <h1 class="h2 fw-bold mb-2">LINE Bot 使い方ガイド</h1>
+  <p class="mb-0 opacity-75">Aiden AI社員との連携方法をご確認ください</p>
+</div>
+
+<div class="container py-4" style="max-width:720px">
+
+  <div class="step-card">
+    <h5 class="fw-bold mb-3"><span class="step-num">1</span>友だち追加</h5>
+    <p>下記QRコードまたはボタンからLINE公式アカウントを友だち追加してください。</p>
+    <div class="text-center py-3">
+      <div class="bg-light rounded p-4 d-inline-block">
+        <span class="text-muted small">QRコードはこちらに設置予定</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <h5 class="fw-bold mb-3"><span class="step-num">2</span>メッセージを送る</h5>
+    <p>友だち追加後、トークルームにメッセージを入力するだけで自動返信が届きます。</p>
+    <ul class="list-unstyled">
+      <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>テキストメッセージ対応</li>
+      <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>24時間365日自動応答</li>
+      <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>お問い合わせ・予約受付</li>
+    </ul>
+  </div>
+
+  <div class="step-card">
+    <h5 class="fw-bold mb-3"><span class="step-num">3</span>コマンド一覧</h5>
+    <table class="table table-bordered table-sm">
+      <thead class="table-success">
+        <tr><th>コマンド</th><th>動作</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>ヘルプ</code></td><td>使い方を表示</td></tr>
+        <tr><td><code>予約</code></td><td>予約フォームを表示</td></tr>
+        <tr><td><code>お問い合わせ</code></td><td>担当者に転送</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="step-card">
+    <h5 class="fw-bold mb-3"><i class="bi bi-question-circle-fill text-warning me-2"></i>お困りの場合</h5>
+    <p class="mb-0">ご不明な点は <a href="/guide/line-setup">セットアップガイド</a> もあわせてご確認ください。</p>
+  </div>
+
+</div>
+</body>
+</html>

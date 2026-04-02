@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LINE メンテナンス案内 | Aiden</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    body { background: #f8f9fa; font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif; }
+    .hero { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 48px 24px; text-align: center; }
+    .hero .icon { font-size: 64px; margin-bottom: 16px; }
+    .card-guide { background: white; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .step-num { background: #f59e0b; color: white; width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; }
+    .status-ok { color: #22c55e; font-weight: bold; }
+    .status-warn { color: #f59e0b; font-weight: bold; }
+  </style>
+</head>
+<body>
+<div class="hero">
+  <div class="icon">🔧</div>
+  <h1 class="h2 fw-bold mb-2">LINE メンテナンス案内</h1>
+  <p class="mb-0 opacity-75">定期メンテナンスの情報と対応方法をご確認ください</p>
+</div>
+
+<div class="container py-4" style="max-width:720px">
+
+  <div class="card-guide">
+    <h5 class="fw-bold mb-3"><i class="bi bi-activity me-2 text-warning"></i>現在のシステム状況</h5>
+    <table class="table table-bordered table-sm">
+      <tbody>
+        <tr>
+          <td>LINE Bot 自動返信</td>
+          <td class="status-ok"><i class="bi bi-check-circle-fill me-1"></i>正常稼働中</td>
+        </tr>
+        <tr>
+          <td>メッセージ送受信</td>
+          <td class="status-ok"><i class="bi bi-check-circle-fill me-1"></i>正常稼働中</td>
+        </tr>
+        <tr>
+          <td>Webhook受信</td>
+          <td class="status-ok"><i class="bi bi-check-circle-fill me-1"></i>正常稼働中</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="text-muted small mb-0">最終確認：システム管理者にお問い合わせください</p>
+  </div>
+
+  <div class="card-guide">
+    <h5 class="fw-bold mb-3"><span class="step-num">1</span>定期メンテナンス予定</h5>
+    <p>毎月第1月曜日 2:00〜4:00（JST）に定期メンテナンスを実施します。</p>
+    <div class="alert alert-warning py-2">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      メンテナンス中はLINE Botが応答しません。緊急の場合は電話でご連絡ください。
+    </div>
+  </div>
+
+  <div class="card-guide">
+    <h5 class="fw-bold mb-3"><span class="step-num">2</span>障害発生時の対応</h5>
+    <ol class="ps-3">
+      <li class="mb-2">LINE Botが応答しない場合、まずLINE公式の障害情報を確認</li>
+      <li class="mb-2">サーバーログを確認（Renderダッシュボード → Logs）</li>
+      <li class="mb-2">Webhookのエンドポイントが正しく設定されているか確認</li>
+      <li class="mb-2">改善しない場合は担当者へ連絡</li>
+    </ol>
+  </div>
+
+  <div class="card-guide">
+    <h5 class="fw-bold mb-3"><span class="step-num">3</span>メンテナンス後の確認事項</h5>
+    <ul class="list-unstyled">
+      <li class="mb-2"><i class="bi bi-check2-square text-success me-2"></i>テストメッセージを送信して自動返信を確認</li>
+      <li class="mb-2"><i class="bi bi-check2-square text-success me-2"></i>Webhookの疎通確認</li>
+      <li class="mb-2"><i class="bi bi-check2-square text-success me-2"></i>管理画面へのアクセス確認</li>
+    </ul>
+  </div>
+
+  <div class="card-guide">
+    <h5 class="fw-bold mb-3"><i class="bi bi-telephone-fill text-success me-2"></i>緊急連絡先</h5>
+    <p class="mb-0">システム障害や緊急のメンテナンスが必要な場合はシステム管理者までご連絡ください。</p>
+  </div>
+
+</div>
+</body>
+</html>

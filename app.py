@@ -2,7 +2,7 @@ import os
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, send_from_directory
 from models import db, Message, Report, Task
 from employees import get_all_employees, get_employee, chat_with_employee, generate_report
 
@@ -479,6 +479,19 @@ X（旧Twitter）/ Instagram / TikTok / YouTube / LinkedIn のうち
         "report_id": report.id,
         "video_url": video_url,
     })
+
+
+# ─── ガイドページ ─────────────────────────────────────────────
+_GUIDE_PAGES = {
+    "line-bot", "video-company", "video-sns",
+    "ai-automation", "stripe", "line-maintenance", "line-setup",
+}
+
+@app.route("/guide/<page>")
+def guide(page):
+    if page not in _GUIDE_PAGES:
+        return redirect(url_for("dashboard"))
+    return send_from_directory("static/guide", f"{page}.html")
 
 
 if __name__ == "__main__":
