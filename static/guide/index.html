@@ -1,140 +1,978 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>サービスガイド | Aiden</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <style>
-    body { background: #f8f9fa; font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif; }
-    .hero { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; padding: 56px 24px; text-align: center; }
-    .hero .icon { font-size: 72px; margin-bottom: 16px; }
-    .service-card {
-      background: white; border-radius: 16px; padding: 28px 24px;
-      margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.07);
-      text-decoration: none; color: inherit; display: block;
-      transition: box-shadow .2s, transform .2s;
-    }
-    .service-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.13); transform: translateY(-2px); color: inherit; }
-    .service-icon { font-size: 2.4rem; margin-bottom: 10px; }
-    .badge-price { background: #f0fdf4; color: #16a34a; border: 1px solid #86efac; font-size: .8rem; padding: 4px 10px; border-radius: 20px; }
-    .price-table th { background: #6366f1; color: white; }
-    .section-title { font-weight: 700; font-size: 1.15rem; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #e5e7eb; }
-    .contact-box { background: linear-gradient(135deg, #06C755 0%, #00A040 100%); color: white; border-radius: 16px; padding: 28px 24px; text-align: center; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aiden（エイデン）サービス納品ガイド</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap');
+
+  :root {
+    --white: #ffffff;
+    --gray: #f7f8fa;
+    --gray-mid: #e4e8ef;
+    --text: #1a1a2e;
+    --text-light: #6b7280;
+
+    /* LINEボット系：緑 */
+    --line-color: #00B900;
+    --line-light: #e8f9e8;
+    --line-dark: #007a00;
+
+    /* 動画制作系：紫 */
+    --video-color: #7C3AED;
+    --video-light: #f0ebff;
+    --video-dark: #5b21b6;
+
+    /* 保守・運用系：ブルー */
+    --support-color: #2563EB;
+    --support-light: #eff6ff;
+    --support-dark: #1d4ed8;
+
+    /* Stripe：インディゴ */
+    --stripe-color: #6772E5;
+    --stripe-light: #eef0ff;
+    --stripe-dark: #4a52c7;
+
+    /* モニターセット：グラデーション用 */
+    --monitor-from: #00B900;
+    --monitor-to: #7C3AED;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f7f8fa;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* COVER */
+  .cover {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: var(--white);
+    padding: 64px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: #00B900;
+    opacity: 0.08;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; right: -60px;
+    width: 250px; height: 250px;
+    border-radius: 50%;
+    background: #7C3AED;
+    opacity: 0.1;
+  }
+  .cover-logo {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .cover-logo span { color: #00B900; }
+  .cover-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+  .cover-title {
+    font-size: 20px;
+    font-weight: 300;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding: 16px 0;
+    margin: 0 auto;
+    max-width: 360px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* NAV */
+  .nav {
+    background: var(--white);
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--gray-mid);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .nav-title {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .nav-item {
+    background: var(--gray);
+    border: 1px solid var(--gray-mid);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: var(--text);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .nav-item:hover { opacity: 0.8; }
+
+  /* SERVICE SECTION */
+  .service {
+    background: var(--white);
+    margin: 16px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+
+  .service-header {
+    padding: 32px 32px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    border-bottom: 1px solid var(--gray-mid);
+    margin-bottom: 28px;
+  }
+  .service-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  /* サービスごとのアイコン色 */
+  #line-bot .service-icon, #line-monthly .service-icon {
+    background: linear-gradient(135deg, var(--line-dark) 0%, var(--line-color) 100%);
+    box-shadow: 0 4px 12px rgba(0,185,0,0.25);
+  }
+  #video-company .service-icon, #video-sns .service-icon {
+    background: linear-gradient(135deg, var(--video-dark) 0%, var(--video-color) 100%);
+    box-shadow: 0 4px 12px rgba(124,58,237,0.25);
+  }
+  #stripe .service-icon {
+    background: linear-gradient(135deg, var(--stripe-dark) 0%, var(--stripe-color) 100%);
+    box-shadow: 0 4px 12px rgba(103,114,229,0.25);
+  }
+  #monitor-set .service-icon {
+    background: linear-gradient(135deg, var(--monitor-from) 0%, var(--monitor-to) 100%);
+    box-shadow: 0 4px 12px rgba(124,58,237,0.2);
+  }
+
+  /* サービスごとのタグ色 */
+  #line-bot .service-tag, #line-monthly .service-tag {
+    color: var(--line-dark); background: var(--line-light);
+  }
+  #video-company .service-tag, #video-sns .service-tag {
+    color: var(--video-dark); background: var(--video-light);
+  }
+  #stripe .service-tag {
+    color: var(--stripe-dark); background: var(--stripe-light);
+  }
+  #monitor-set .service-tag {
+    color: var(--video-dark); background: var(--video-light);
+  }
+
+  /* サービスごとの価格色 */
+  #line-bot .service-price, #line-monthly .service-price { color: var(--line-dark); }
+  #video-company .service-price, #video-sns .service-price { color: var(--video-dark); }
+  #stripe .service-price { color: var(--stripe-dark); }
+  #monitor-set .service-price { color: var(--monitor-from); }
+
+  /* サービスごとのフローナンバー */
+  #line-bot .flow-num, #line-monthly .flow-num {
+    background: linear-gradient(135deg, var(--line-dark) 0%, var(--line-color) 100%);
+    box-shadow: 0 2px 6px rgba(0,185,0,0.3);
+  }
+  #video-company .flow-num, #video-sns .flow-num {
+    background: linear-gradient(135deg, var(--video-dark) 0%, var(--video-color) 100%);
+    box-shadow: 0 2px 6px rgba(124,58,237,0.3);
+  }
+  #stripe .flow-num {
+    background: linear-gradient(135deg, var(--stripe-dark) 0%, var(--stripe-color) 100%);
+    box-shadow: 0 2px 6px rgba(103,114,229,0.3);
+  }
+  #monitor-set .flow-num {
+    background: linear-gradient(135deg, var(--monitor-from) 0%, var(--monitor-to) 100%);
+  }
+
+  /* サービスごとのflow-note */
+  #line-bot .flow-note, #line-monthly .flow-note {
+    background: var(--line-light); border-left-color: var(--line-color); color: var(--line-dark);
+  }
+  #video-company .flow-note, #video-sns .flow-note {
+    background: var(--video-light); border-left-color: var(--video-color); color: var(--video-dark);
+  }
+  #stripe .flow-note {
+    background: var(--stripe-light); border-left-color: var(--stripe-color); color: var(--stripe-dark);
+  }
+
+  .service-meta { flex: 1; }
+  .service-tag {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+  .service-name {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .service-price {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .service-price span {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-light);
+  }
+
+  .section-block {
+    padding: 0 32px;
+    margin-bottom: 28px;
+  }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-mid);
+  }
+
+  /* FLOW */
+  .flow-list { list-style: none; }
+  .flow-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px dashed var(--gray-mid);
+  }
+  .flow-item:last-child { border-bottom: none; }
+  .flow-num {
+    width: 32px;
+    height: 32px;
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .flow-content { flex: 1; }
+  .flow-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .flow-desc {
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+  .flow-note {
+    border-left: 3px solid;
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  /* INCLUDES */
+  .includes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .include-item {
+    background: var(--gray);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .include-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* WARRANTY */
+  .warranty-box {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    color: var(--white);
+    border-radius: 14px;
+    padding: 20px 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .warranty-icon { font-size: 28px; flex-shrink: 0; }
+  .warranty-title { font-weight: 700; margin-bottom: 4px; }
+  .warranty-desc { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.6; }
+
+  /* NOTICE */
+  .notice-list { list-style: none; }
+  .notice-item {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-light);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--gray);
+  }
+  .notice-item::before { content: '※'; flex-shrink: 0; color: var(--line-color); }
+  }
+  .notice-item::before { content: '※'; flex-shrink: 0; color: var(--green); }
+
+  /* FOOTER */
+  .footer {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    padding: 36px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-top: 16px;
+  }
+  .footer strong { color: #00B900; }
+</style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="icon">🤖</div>
-  <h1 class="h2 fw-bold mb-2">Aiden サービスガイド</h1>
-  <p class="mb-0 opacity-75">AI社員・自動化・LINE連携サービスの詳細はこちら</p>
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">Ai<span>den</span></div>
+  <div class="cover-sub">AI Business Automation</div>
+  <div class="cover-title">サービス納品ガイド</div>
 </div>
 
-<div class="container py-4" style="max-width:720px">
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-title">サービス一覧</div>
+  <div class="nav-list">
+    <a href="#line-bot" class="nav-item">💬 LINEボット制作</a>
+    <a href="#video-company" class="nav-item">🎬 会社紹介動画</a>
+    <a href="#video-sns" class="nav-item">📱 SNS広告動画</a>
+    <a href="#line-monthly" class="nav-item">🔧 LINE月額保守</a>
+    <a href="#stripe" class="nav-item">💳 Stripe決済構築</a>
+    <a href="#monitor-set" class="nav-item">🎁 モニター限定セット</a>
+  </div>
+</div>
 
-  <!-- サービス一覧 -->
-  <p class="section-title mt-2"><i class="bi bi-grid-3x3-gap me-2"></i>サービス一覧</p>
 
-  <a href="/guide/ai-automation" class="service-card">
-    <div class="service-icon">🤖</div>
-    <div class="fw-bold fs-6 mb-1">AI 自動化サービス</div>
-    <div class="text-muted small mb-2">業務プロセスをAIで自動化。レポート生成・タスク管理・一括メッセージ送信など。</div>
-    <span class="badge-price">詳細を見る →</span>
-  </a>
-
-  <a href="/guide/line-bot" class="service-card">
+<!-- ① LINEボット制作 -->
+<div class="service" id="line-bot">
+  <div class="service-header">
     <div class="service-icon">💬</div>
-    <div class="fw-bold fs-6 mb-1">LINE Bot 構築サービス</div>
-    <div class="text-muted small mb-2">LINE公式アカウントとAI社員を連携。自動返信・問い合わせ対応・予約受付。</div>
-    <span class="badge-price">詳細を見る →</span>
-  </a>
-
-  <a href="/guide/line-setup" class="service-card">
-    <div class="service-icon">⚙️</div>
-    <div class="fw-bold fs-6 mb-1">LINE Bot セットアップ</div>
-    <div class="text-muted small mb-2">LINE Messaging API の初期設定・Webhook 設定・本番環境への導入手順。</div>
-    <span class="badge-price">詳細を見る →</span>
-  </a>
-
-  <a href="/guide/line-maintenance" class="service-card">
-    <div class="service-icon">🔧</div>
-    <div class="fw-bold fs-6 mb-1">LINE Bot 保守・運用サービス</div>
-    <div class="text-muted small mb-2">導入後の継続サポート・改善提案・障害対応をお任せください。</div>
-    <span class="badge-price">詳細を見る →</span>
-  </a>
-
-  <a href="/guide/video-sns" class="service-card">
-    <div class="service-icon">📱</div>
-    <div class="fw-bold fs-6 mb-1">SNS 動画マーケティング</div>
-    <div class="text-muted small mb-2">TikTok・Instagram・YouTube向けの動画企画・制作・分析サービス。</div>
-    <span class="badge-price">詳細を見る →</span>
-  </a>
-
-  <a href="/guide/video-company" class="service-card">
-    <div class="service-icon">🎬</div>
-    <div class="fw-bold fs-6 mb-1">会社紹介動画制作</div>
-    <div class="text-muted small mb-2">プロによる会社紹介動画の企画・撮影・編集。採用・営業資料として活用。</div>
-    <span class="badge-price">詳細を見る →</span>
-  </a>
-
-  <a href="/guide/stripe" class="service-card">
-    <div class="service-icon">💳</div>
-    <div class="fw-bold fs-6 mb-1">Stripe 決済導入サービス</div>
-    <div class="text-muted small mb-2">Stripe を活用したオンライン決済システムの設計・導入・保守。</div>
-    <span class="badge-price">詳細を見る →</span>
-  </a>
-
-  <!-- 料金表 -->
-  <p class="section-title mt-4"><i class="bi bi-currency-yen me-2"></i>料金プラン</p>
-
-  <div class="bg-white rounded-4 p-3 mb-3 shadow-sm">
-    <table class="table table-bordered table-sm mb-0 text-center">
-      <thead>
-        <tr class="price-table">
-          <th>プラン</th>
-          <th>月額</th>
-          <th>主な内容</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="fw-bold">ライト</td>
-          <td>¥29,800</td>
-          <td class="text-start">LINE Bot 基本機能・自動返信</td>
-        </tr>
-        <tr>
-          <td class="fw-bold">スタンダード</td>
-          <td>¥59,800</td>
-          <td class="text-start">AI社員連携・レポート生成・動画分析</td>
-        </tr>
-        <tr>
-          <td class="fw-bold">プレミアム</td>
-          <td>¥99,800</td>
-          <td class="text-start">フルカスタマイズ・専任サポート・Stripe 導入</td>
-        </tr>
-      </tbody>
-    </table>
-    <p class="text-muted small mt-2 mb-0">※ 初期費用・カスタマイズ費用は別途ご相談ください。</p>
+    <div class="service-meta">
+      <div class="service-tag">SERVICE 01</div>
+      <div class="service-name">LINEチャットボット制作<br>（AI搭載・スタンダード）</div>
+      <div class="service-price">¥200,000 <span>（税込）</span></div>
+    </div>
   </div>
 
-  <!-- お問い合わせ -->
-  <div class="contact-box mt-4">
-    <div class="fs-2 mb-2">💬</div>
-    <div class="fw-bold fs-5 mb-1">LINE でお問い合わせ</div>
-    <p class="opacity-90 small mb-3">ご質問・お見積もりはお気軽にどうぞ。<br>担当者が丁寧にご対応いたします。</p>
-    <a href="https://lin.ee/example" class="btn btn-light fw-bold px-4">
-      <i class="bi bi-chat-dots me-2"></i>LINE で相談する
-    </a>
+  <div class="section-block">
+    <div class="section-label">納品の流れ</div>
+    <ul class="flow-list">
+      <li class="flow-item">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <div class="flow-title">お支払い完了</div>
+          <div class="flow-desc">Stripeの決済リンクよりクレジットカードまたはApple Payでお支払いいただきます。決済完了後、自動で確認メッセージが届きます。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <div class="flow-title">制作開始のご連絡</div>
+          <div class="flow-desc">決済確認後、AIスタッフよりLINEにて「制作を開始いたします」のご連絡をお送りします。ヒアリングシートの内容をもとに制作を進めます。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <div class="flow-title">設定キーをお送りください</div>
+          <div class="flow-desc">別途お送りする「LINE設定手順書」に沿って、LINE DevelopersからChannel SecretとChannel Access Tokenの2つをコピーしてLINEで送付してください。</div>
+          <div class="flow-note">📋 画面のスクリーンショット付きの手順書をお送りします！コピー&ペーストするだけなので、パソコンが苦手な方でも約10〜15分で完了します。わからない場合はAidenスタッフがサポートします。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">4</div>
+        <div class="flow-content">
+          <div class="flow-title">LINEボットの制作・設定</div>
+          <div class="flow-desc">お送りいただいたキーをもとに、お客様のLINE公式アカウントにチャットボットを設置します。業種・サービス内容に合わせてカスタマイズした自動応答を設計します。お客様の作業は一切不要です。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">5</div>
+        <div class="flow-content">
+          <div class="flow-title">動作確認・テスト</div>
+          <div class="flow-desc">Aidenスタッフがボットの動作確認を行います。問題があれば修正を行い、品質を確認します。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">6</div>
+        <div class="flow-content">
+          <div class="flow-title">納品・引き渡し</div>
+          <div class="flow-desc">動作確認完了後、LINEにて「納品完了」のご連絡をお送りします。使い方のご説明も行います。</div>
+        </div>
+      </li>
+    </ul>
   </div>
 
-  <div class="text-center text-muted small py-4">
-    © 2024 Aiden Inc. All rights reserved.
+  <div class="section-block">
+    <div class="section-label">含まれるもの</div>
+    <div class="includes-grid">
+      <div class="include-item"><span class="include-icon">✅</span>AI自動応答設定（業種別カスタマイズ）</div>
+      <div class="include-item"><span class="include-icon">✅</span>よくある質問の自動回答</div>
+      <div class="include-item"><span class="include-icon">✅</span>問い合わせ・予約受付フロー</div>
+      <div class="include-item"><span class="include-icon">✅</span>初期設定・動作テスト</div>
+      <div class="include-item"><span class="include-icon">✅</span>LINE設定手順書</div>
+      <div class="include-item"><span class="include-icon">✅</span>納品後1週間のサポート</div>
+    </div>
   </div>
 
+  <div class="section-block">
+    <div class="section-label">保証・サポート</div>
+    <div class="warranty-box">
+      <div class="warranty-icon">🛡️</div>
+      <div>
+        <div class="warranty-title">納品後1週間サポート付き</div>
+        <div class="warranty-desc">納品後1週間以内に不具合が発生した場合は無償で対応いたします。継続的な運用サポートは「LINE月額保守サービス（¥30,000/月）」をご利用ください。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">注意事項</div>
+    <ul class="notice-list">
+      <li class="notice-item">LINE公式アカウント（認証済みまたは未認証）をお持ちでない場合は別途取得が必要です。</li>
+      <li class="notice-item">制作期間は設定キー受領後、通常3〜5営業日です。</li>
+      <li class="notice-item">大幅な仕様変更は別途お見積りとなります。</li>
+    </ul>
+  </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ② 会社紹介動画 -->
+<div class="service" id="video-company">
+  <div class="service-header">
+    <div class="service-icon">🎬</div>
+    <div class="service-meta">
+      <div class="service-tag">SERVICE 02</div>
+      <div class="service-name">会社紹介動画制作<br>（AIアバター出演）</div>
+      <div class="service-price">¥80,000 <span>（税込）〜</span></div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">プラン</div>
+    <div class="includes-grid">
+      <div class="include-item" style="grid-column: span 2; background: #f0fff0; border: 1px solid #00B900;">
+        <span class="include-icon">🎬</span>
+        <div>
+          <strong>スタンダードプラン ¥80,000</strong><br>
+          <span style="font-size:12px; color:#666;">既存のAIアバター（Aoi）が出演する会社紹介動画</span>
+        </div>
+      </div>
+      <div class="include-item" style="grid-column: span 2; background: #fff8f0; border: 1px solid #ff9900;">
+        <span class="include-icon">⭐</span>
+        <div>
+          <strong>オリジナルアバタープラン ¥120,000</strong><br>
+          <span style="font-size:12px; color:#666;">お客様の写真からオリジナルAIアバターを作成して出演</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">納品の流れ</div>
+    <ul class="flow-list">
+      <li class="flow-item">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <div class="flow-title">お支払い完了</div>
+          <div class="flow-desc">Stripeの決済リンクよりお支払いいただきます。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <div class="flow-title">ヒアリング</div>
+          <div class="flow-desc">会社名・事業内容・アピールポイント・ターゲット・動画の雰囲気などをLINEでお伺いします。オリジナルアバタープランの場合は正面を向いた顔写真もお送りください。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <div class="flow-title">台本・構成の作成</div>
+          <div class="flow-desc">AIスタッフがヒアリング内容をもとに台本と動画構成を作成します。ご確認いただいてからOKをいただければ制作に進みます。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">4</div>
+        <div class="flow-content">
+          <div class="flow-title">動画制作</div>
+          <div class="flow-desc">AIアバターが台本を読み上げる動画を制作します。字幕・BGM・テロップも追加します。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">5</div>
+        <div class="flow-content">
+          <div class="flow-title">確認・修正</div>
+          <div class="flow-desc">完成した動画をご確認いただきます。軽微な修正は1回まで無償対応します。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">6</div>
+        <div class="flow-content">
+          <div class="flow-title">納品</div>
+          <div class="flow-desc">LINEまたはGoogleドライブのリンクにて動画ファイル（MP4）をお渡しします。YouTubeへのアップロード代行もご相談ください。</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">含まれるもの</div>
+    <div class="includes-grid">
+      <div class="include-item"><span class="include-icon">✅</span>台本・構成の作成</div>
+      <div class="include-item"><span class="include-icon">✅</span>AIアバター出演動画（1〜3分）</div>
+      <div class="include-item"><span class="include-icon">✅</span>字幕・テロップ・BGM</div>
+      <div class="include-item"><span class="include-icon">✅</span>MP4形式での納品</div>
+      <div class="include-item"><span class="include-icon">✅</span>修正1回まで無償</div>
+      <div class="include-item"><span class="include-icon">✅</span>多言語対応可（40言語）</div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">注意事項</div>
+    <ul class="notice-list">
+      <li class="notice-item">制作期間はヒアリング完了後、通常5〜7営業日です。</li>
+      <li class="notice-item">オリジナルアバター作成の場合は別途2〜3営業日追加となります。</li>
+      <li class="notice-item">2回目以降の修正は別途¥10,000〜となります。</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ③ SNS広告動画 -->
+<div class="service" id="video-sns">
+  <div class="service-header">
+    <div class="service-icon">📱</div>
+    <div class="service-meta">
+      <div class="service-tag">SERVICE 03</div>
+      <div class="service-name">SNS広告動画制作<br>（AIアバター出演）</div>
+      <div class="service-price">¥50,000〜 <span>（税込）</span></div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">プラン</div>
+    <div class="includes-grid">
+      <div class="include-item" style="grid-column: span 2; background: #f0fff0; border: 1px solid #00B900;">
+        <span class="include-icon">📱</span>
+        <div>
+          <strong>スタンダードプラン ¥50,000</strong><br>
+          <span style="font-size:12px; color:#666;">既存AIアバター（Aoi）出演・単発1本制作</span>
+        </div>
+      </div>
+      <div class="include-item" style="grid-column: span 2; background: #fff8f0; border: 1px solid #ff9900;">
+        <span class="include-icon">⭐</span>
+        <div>
+          <strong>オリジナルアバタープラン ¥80,000</strong><br>
+          <span style="font-size:12px; color:#666;">お客様の写真からオリジナルアバター作成込み・単発1本</span>
+        </div>
+      </div>
+      <div class="include-item" style="grid-column: span 2; background: #f0f4ff; border: 1px solid #4466ff;">
+        <span class="include-icon">📅</span>
+        <div>
+          <strong>月額プラン ¥80,000/月（月4本制作）</strong><br>
+          <span style="font-size:12px; color:#666;">毎月4本のSNS広告動画を継続制作・TikTok/Instagram/X対応</span><br>
+          <span style="font-size:12px; color:#4466ff;">✨ アバターが話す内容・台本を毎月変更できます。新商品・キャンペーン・季節に合わせて柔軟に対応します。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">納品の流れ</div>
+    <ul class="flow-list">
+      <li class="flow-item">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <div class="flow-title">お支払い完了</div>
+          <div class="flow-desc">Stripeの決済リンクよりお支払いいただきます。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <div class="flow-title">ヒアリング</div>
+          <div class="flow-desc">商品・サービス内容、ターゲット層、訴求ポイント、投稿先SNS（TikTok/Instagram/Xなど）をお伺いします。オリジナルアバタープランの場合は顔写真もお送りください。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <div class="flow-title">台本・動画制作</div>
+          <div class="flow-desc">30秒以内の広告動画を制作します。多言語対応も可能です（日本語・英語・中国語など40言語）。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">4</div>
+        <div class="flow-content">
+          <div class="flow-title">確認・納品</div>
+          <div class="flow-desc">動画をご確認いただき、MP4形式でLINEまたはGoogleドライブにて納品します。</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">含まれるもの</div>
+    <div class="includes-grid">
+      <div class="include-item"><span class="include-icon">✅</span>台本作成</div>
+      <div class="include-item"><span class="include-icon">✅</span>AIアバター出演動画（30秒以内）</div>
+      <div class="include-item"><span class="include-icon">✅</span>字幕・テロップ</div>
+      <div class="include-item"><span class="include-icon">✅</span>MP4形式での納品</div>
+      <div class="include-item"><span class="include-icon">✅</span>多言語対応可（40言語）</div>
+      <div class="include-item"><span class="include-icon">✅</span>TikTok/Instagram/X対応</div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">注意事項</div>
+    <ul class="notice-list">
+      <li class="notice-item">制作期間はヒアリング完了後、通常3〜5営業日です。</li>
+      <li class="notice-item">月額プランは翌月から制作開始となります。</li>
+      <li class="notice-item">修正は1回まで無償です。2回目以降は別途¥5,000〜となります。</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ④ LINE月額保守 -->
+<div class="service" id="line-monthly">
+  <div class="service-header">
+    <div class="service-icon">🔧</div>
+    <div class="service-meta">
+      <div class="service-tag">SERVICE 04</div>
+      <div class="service-name">LINE月額保守・管理サービス</div>
+      <div class="service-price">¥50,000<span>/月（税込）</span></div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">サービス内容</div>
+    <div class="includes-grid">
+      <div class="include-item"><span class="include-icon">🔍</span>システム監視・エラー対応</div>
+      <div class="include-item"><span class="include-icon">📊</span>月次レポートの提出</div>
+      <div class="include-item"><span class="include-icon">💡</span>改善提案・内容更新</div>
+      <div class="include-item"><span class="include-icon">💬</span>チャット応答内容の調整</div>
+      <div class="include-item"><span class="include-icon">🔄</span>APIアップデート対応</div>
+      <div class="include-item"><span class="include-icon">📞</span>LINEサポート対応</div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">開始の流れ</div>
+    <ul class="flow-list">
+      <li class="flow-item">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <div class="flow-title">お申し込み・初回お支払い</div>
+          <div class="flow-desc">Stripeの決済リンクより月額¥50,000をお支払いいただきます。翌月以降は自動で請求されます。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <div class="flow-title">現状確認・引き継ぎ</div>
+          <div class="flow-desc">現在稼働しているLINEボットの設定・内容を確認します。他社で作成したボットの引き継ぎも可能です。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <div class="flow-title">月次サポート開始</div>
+          <div class="flow-desc">毎月の監視・改善・レポートをAidenが代行します。</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">保証・サポート</div>
+    <div class="warranty-box">
+      <div class="warranty-icon">🔄</div>
+      <div>
+        <div class="warranty-title">いつでも解約可能</div>
+        <div class="warranty-desc">月単位の契約です。解約希望の場合は翌月請求の7日前までにLINEにてご連絡ください。違約金・手数料は一切かかりません。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">注意事項</div>
+    <ul class="notice-list">
+      <li class="notice-item">月3回を超える大幅な仕様変更は別途お見積りとなります。</li>
+      <li class="notice-item">LINEボット制作を他社で行った場合、設定キーをお持ちであれば引き継ぎ可能です。</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ⑤ Stripe決済環境構築 -->
+<div class="service" id="stripe">
+  <div class="service-header">
+    <div class="service-icon">💳</div>
+    <div class="service-meta">
+      <div class="service-tag">SERVICE 05</div>
+      <div class="service-name">キャッシュレス決済<br>導入サービス</div>
+      <div class="service-price">¥50,000〜 <span>（税込）</span></div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">プラン</div>
+    <div class="includes-grid">
+      <div class="include-item" style="grid-column: span 2; background: #f0fff0; border: 1px solid #00B900;">
+        <span class="include-icon">💳</span>
+        <div>
+          <strong>基本プラン ¥50,000</strong><br>
+          <span style="font-size:12px; color:#666;">クレジットカード・Apple Pay・コンビニ払い対応の決済リンクを最大3つ作成</span>
+        </div>
+      </div>
+      <div class="include-item" style="grid-column: span 2; background: #fff8f0; border: 1px solid #ff9900;">
+        <span class="include-icon">🔗</span>
+        <div>
+          <strong>LINEボット連携プラン ¥80,000</strong><br>
+          <span style="font-size:12px; color:#666;">基本プラン＋LINEボットと決済リンクを自動連携。「申込む」と送るだけで自動決済！</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">納品の流れ</div>
+    <ul class="flow-list">
+      <li class="flow-item">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <div class="flow-title">お支払い完了</div>
+          <div class="flow-desc">Stripeの決済リンクよりお支払いいただきます。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <div class="flow-title">ヒアリング</div>
+          <div class="flow-desc">販売したい商品・サービス名、金額、月額か単発かなどをお伺いします。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <div class="flow-title">Stripeアカウント開設サポート</div>
+          <div class="flow-desc">まだStripeをお持ちでない場合は開設手順をサポートします。本人確認（運転免許証またはマイナンバーカード）と銀行口座が必要です。</div>
+          <div class="flow-note">📋 画面付きの手順書をお送りします。操作はコピー&ペーストが中心で、パソコンが苦手な方でも完了できます。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">4</div>
+        <div class="flow-content">
+          <div class="flow-title">商品登録・決済リンク作成</div>
+          <div class="flow-desc">ご希望の商品・サービスをStripeに登録し、お客様に送れる決済リンクを発行します。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">5</div>
+        <div class="flow-content">
+          <div class="flow-title">納品・使い方説明</div>
+          <div class="flow-desc">決済リンクをお渡しします。「LINEでこのURLを送るだけ」でお客様がその場でカード決済できるようになります。</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">含まれるもの（基本プラン）</div>
+    <div class="includes-grid">
+      <div class="include-item"><span class="include-icon">✅</span>決済アカウント開設サポート</div>
+      <div class="include-item"><span class="include-icon">✅</span>クレジットカード対応（VISA・Master・JCB・AMEX）</div>
+      <div class="include-item"><span class="include-icon">✅</span>Apple Pay・Google Pay対応</div>
+      <div class="include-item"><span class="include-icon">✅</span>コンビニ払い・銀行振込対応</div>
+      <div class="include-item"><span class="include-icon">✅</span>決済リンク作成（3つまで）</div>
+      <div class="include-item"><span class="include-icon">✅</span>納品後1週間サポート</div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">注意事項</div>
+    <ul class="notice-list">
+      <li class="notice-item">決済手数料（売上の3.6%）は別途Stripeに発生します。エイデンへの追加費用ではありません。</li>
+      <li class="notice-item">本人確認書類（運転免許証またはマイナンバーカード）と銀行口座が必要です。</li>
+      <li class="notice-item">制作期間はヒアリング完了後、通常2〜3営業日です。</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ⑥ モニター限定セット -->
+<div class="service" id="monitor-set">
+  <div class="service-header">
+    <div class="service-icon">🎁</div>
+    <div class="service-meta">
+      <div class="service-tag">SERVICE 06 ／ 先着3社限定</div>
+      <div class="service-name">【モニター限定】<br>LINEボット×会社紹介動画セット</div>
+      <div class="service-price">¥150,000 <span>（税込・通常¥320,000）</span></div>
+    </div>
+  </div>
+
+  <div class="section-block" style="padding-bottom: 0;">
+    <div style="background: linear-gradient(135deg, #00B900 0%, #7C3AED 100%); border-radius: 14px; padding: 20px 24px; color: white; margin-bottom: 28px;">
+      <div style="font-size: 12px; letter-spacing: 2px; opacity: 0.8; margin-bottom: 6px;">MONITOR PRICE</div>
+      <div style="font-size: 18px; font-weight: 700;">通常¥320,000 → モニター価格¥150,000</div>
+      <div style="font-size: 13px; opacity: 0.85; margin-top: 6px;">先着3社様限定。フィードバックをいただく代わりに特別価格でご提供します。</div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">セット内容</div>
+    <div class="includes-grid">
+      <div class="include-item" style="grid-column: span 2; background: #e8f9e8; border: 1px solid #00B900;">
+        <span class="include-icon">💬</span>
+        <div>
+          <strong>LINEチャットボット制作（AI搭載）</strong><br>
+          <span style="font-size:12px; color:#666;">通常¥200,000 → セット価格に含む</span>
+        </div>
+      </div>
+      <div class="include-item" style="grid-column: span 2; background: #f0ebff; border: 1px solid #7C3AED;">
+        <span class="include-icon">🎬</span>
+        <div>
+          <strong>会社紹介動画制作（AIアバター出演）</strong><br>
+          <span style="font-size:12px; color:#666;">通常¥80,000 → セット価格に含む</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">納品の流れ</div>
+    <ul class="flow-list">
+      <li class="flow-item">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <div class="flow-title">お支払い完了（¥150,000）</div>
+          <div class="flow-desc">Stripeの決済リンクよりお支払いいただきます。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <div class="flow-title">ヒアリング</div>
+          <div class="flow-desc">会社情報・サービス内容・ターゲット・LINEアカウントの状況をお伺いします。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <div class="flow-title">LINE設定キーをお送りください</div>
+          <div class="flow-desc">手順書に沿ってChannel SecretとChannel Access Tokenをお送りください。</div>
+          <div class="flow-note">📋 画面付きの手順書をお送りします。コピー&ペーストするだけで完了します！</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">4</div>
+        <div class="flow-content">
+          <div class="flow-title">LINEボット＋動画を同時制作</div>
+          <div class="flow-desc">LINEチャットボットと会社紹介動画を並行して制作します。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">5</div>
+        <div class="flow-content">
+          <div class="flow-title">確認・修正</div>
+          <div class="flow-desc">完成したボットと動画をご確認いただきます。修正は各1回まで無償対応。</div>
+        </div>
+      </li>
+      <li class="flow-item">
+        <div class="flow-num">6</div>
+        <div class="flow-content">
+          <div class="flow-title">納品・フィードバック</div>
+          <div class="flow-desc">納品完了後、簡単なフィードバックシート（5分程度）にご回答いただきます。</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">保証・サポート</div>
+    <div class="warranty-box" style="background: linear-gradient(135deg, #B45309 0%, #D97706 50%, #F59E0B 100%); box-shadow: 0 4px 20px rgba(217,119,6,0.3);">
+      <div class="warranty-icon">🏆</div>
+      <div>
+        <div class="warranty-title">納品後3ヶ月サポート付き</div>
+        <div class="warranty-desc">モニター様には特別に3ヶ月間のサポートをご提供します。不具合・ご不明点はLINEにていつでもご連絡ください。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">注意事項</div>
+    <ul class="notice-list">
+      <li class="notice-item">先着3社様限定のため、枠が埋まり次第終了となります。</li>
+      <li class="notice-item">制作期間はキー受領・ヒアリング完了後、通常7〜10営業日です。</li>
+      <li class="notice-item">フィードバックシートへのご回答（5分程度）をお願いしております。</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<div class="footer">
+  <strong>Aiden（エイデン）</strong><br>
+  LINE: @474pqexj ｜ AI Business Automation<br><br>
+  ご不明点はLINEにてお気軽にお問い合わせください。
+</div>
+
 </body>
 </html>
