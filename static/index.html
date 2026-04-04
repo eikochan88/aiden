@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aiden（エイデン）| AIが働く、新しい時代へ。</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0F172A;
+      --navy-light: #1E293B;
+      --green: #00B900;
+      --green-dark: #009900;
+      --green-light: #E6F9E6;
+      --white: #FFFFFF;
+      --gray: #F8FAFC;
+      --text: #334155;
+    }
+
+    * { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif;
+      color: var(--text);
+      background: var(--white);
+    }
+
+    /* ── ナビゲーション ── */
+    .navbar {
+      background: var(--navy);
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 12px rgba(0,0,0,.3);
+    }
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--white) !important;
+      letter-spacing: .05em;
+    }
+    .navbar-brand span { color: var(--green); }
+    .nav-link {
+      color: rgba(255,255,255,.8) !important;
+      font-weight: 500;
+      font-size: .95rem;
+      padding: 6px 14px !important;
+      transition: color .2s;
+    }
+    .nav-link:hover { color: var(--green) !important; }
+    .nav-cta {
+      background: var(--green);
+      color: var(--white) !important;
+      border-radius: 24px;
+      padding: 8px 20px !important;
+      font-weight: 700;
+      transition: background .2s, transform .1s;
+    }
+    .nav-cta:hover { background: var(--green-dark) !important; transform: translateY(-1px); }
+
+    /* ── ヒーロー ── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #162039 60%, #1a2a4a 100%);
+      color: var(--white);
+      padding: 100px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,185,0,.12) 0%, transparent 70%);
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,185,0,.08) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(0,185,0,.15);
+      border: 1px solid rgba(0,185,0,.4);
+      color: #4ade80;
+      font-size: .8rem;
+      font-weight: 700;
+      padding: 5px 16px;
+      border-radius: 20px;
+      letter-spacing: .08em;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.3;
+      margin-bottom: 20px;
+    }
+    .hero h1 .accent { color: var(--green); }
+    .hero p {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,.75);
+      max-width: 540px;
+      line-height: 1.8;
+      margin-bottom: 36px;
+    }
+    .btn-line {
+      background: var(--green);
+      color: var(--white);
+      font-weight: 800;
+      font-size: 1.05rem;
+      padding: 16px 36px;
+      border-radius: 50px;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(0,185,0,.35);
+    }
+    .btn-line:hover {
+      background: var(--green-dark);
+      color: var(--white);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0,185,0,.45);
+    }
+    .btn-line-outline {
+      background: transparent;
+      color: var(--white);
+      font-weight: 700;
+      font-size: .95rem;
+      padding: 12px 28px;
+      border-radius: 50px;
+      border: 2px solid rgba(255,255,255,.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: border-color .2s, background .2s;
+    }
+    .btn-line-outline:hover {
+      border-color: var(--green);
+      background: rgba(0,185,0,.1);
+      color: var(--white);
+    }
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,.12);
+    }
+    .hero-stats .stat-num {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--green);
+      line-height: 1;
+    }
+    .hero-stats .stat-label {
+      font-size: .78rem;
+      color: rgba(255,255,255,.6);
+      margin-top: 4px;
+    }
+
+    /* ── セクション共通 ── */
+    section { padding: 80px 0; }
+    .section-label {
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .15em;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    .section-sub {
+      color: #64748b;
+      font-size: .97rem;
+      margin-bottom: 48px;
+    }
+
+    /* ── サービス ── */
+    .service-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 32px 28px;
+      height: 100%;
+      border: 1px solid #e2e8f0;
+      transition: box-shadow .25s, transform .25s, border-color .25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--green);
+      transform: scaleX(0);
+      transition: transform .3s;
+    }
+    .service-card:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,.1);
+      transform: translateY(-4px);
+      border-color: var(--green);
+    }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-icon {
+      width: 60px; height: 60px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.7rem;
+      margin-bottom: 18px;
+      background: var(--green-light);
+    }
+    .service-price {
+      font-size: .95rem;
+      font-weight: 800;
+      color: var(--green-dark);
+      background: var(--green-light);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-top: 12px;
+    }
+    .badge-popular {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: var(--green);
+      color: white;
+      font-size: .7rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    /* ── 料金表 ── */
+    .pricing-section { background: var(--gray); }
+    .price-card {
+      background: var(--white);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 2px solid #e2e8f0;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+    }
+    .price-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,.1);
+      border-color: var(--green);
+    }
+    .price-card.featured {
+      border-color: var(--green);
+      box-shadow: 0 8px 32px rgba(0,185,0,.2);
+    }
+    .price-card-header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 24px;
+      text-align: center;
+    }
+    .price-card.featured .price-card-header {
+      background: var(--green);
+    }
+    .price-card-header .price-icon { font-size: 2rem; margin-bottom: 8px; }
+    .price-card-header h4 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .price-card-header .amount {
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .price-card-header .amount small { font-size: .9rem; font-weight: 500; }
+    .price-card-body { padding: 24px; }
+    .price-feature {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin-bottom: 10px;
+      font-size: .9rem;
+    }
+    .price-feature .bi-check-circle-fill { color: var(--green); flex-shrink: 0; margin-top: 2px; }
+
+    /* ── 導入の流れ ── */
+    .flow-section { background: var(--navy); color: var(--white); }
+    .flow-section .section-title { color: var(--white); }
+    .flow-section .section-sub { color: rgba(255,255,255,.6); }
+    .flow-step {
+      text-align: center;
+      position: relative;
+    }
+    .flow-num {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--white);
+      font-size: 1.3rem;
+      font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .flow-icon { font-size: 2rem; margin-bottom: 10px; }
+    .flow-title { font-weight: 800; font-size: 1rem; margin-bottom: 6px; }
+    .flow-desc { font-size: .85rem; color: rgba(255,255,255,.65); line-height: 1.6; }
+    .flow-arrow {
+      position: absolute;
+      right: -12px; top: 20px;
+      color: var(--green);
+      font-size: 1.5rem;
+    }
+    @media (max-width: 767px) { .flow-arrow { display: none; } }
+
+    /* ── FAQ ── */
+    .faq-section { background: var(--gray); }
+    .accordion-button {
+      font-weight: 700;
+      color: var(--navy);
+      background: var(--white);
+      font-size: .97rem;
+    }
+    .accordion-button:not(.collapsed) {
+      color: var(--green-dark);
+      background: var(--green-light);
+      box-shadow: none;
+    }
+    .accordion-button::after {
+      filter: none;
+    }
+    .accordion-button:focus { box-shadow: none; }
+    .accordion-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px !important;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .accordion-body {
+      font-size: .93rem;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    /* ── LINE CTA バナー ── */
+    .cta-section {
+      background: linear-gradient(135deg, var(--green) 0%, #00a000 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 72px 24px;
+    }
+    .cta-section h2 {
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+    .btn-line-white {
+      background: var(--white);
+      color: var(--green-dark);
+      font-weight: 800;
+      font-size: 1.05rem;
+      padding: 16px 40px;
+      border-radius: 50px;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    }
+    .btn-line-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0,0,0,.25);
+      color: var(--green-dark);
+    }
+
+    /* ── フッター ── */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.7);
+      padding: 40px 24px 28px;
+      text-align: center;
+    }
+    footer .footer-logo {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    footer .footer-logo span { color: var(--green); }
+    footer .footer-links a {
+      color: rgba(255,255,255,.6);
+      text-decoration: none;
+      font-size: .88rem;
+      margin: 0 10px;
+      transition: color .2s;
+    }
+    footer .footer-links a:hover { color: var(--green); }
+    footer .footer-line {
+      background: rgba(0,185,0,.15);
+      border: 1px solid rgba(0,185,0,.3);
+      border-radius: 12px;
+      padding: 14px 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0;
+      color: #4ade80;
+      font-size: .9rem;
+      font-weight: 600;
+    }
+
+    /* ── スクロールアニメーション ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ナビゲーション -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="#">Ai<span>den</span></a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon" style="filter:invert(1)"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+        <li class="nav-item"><a class="nav-link" href="#services">サービス</a></li>
+        <li class="nav-item"><a class="nav-link" href="#pricing">料金</a></li>
+        <li class="nav-item"><a class="nav-link" href="#flow">導入の流れ</a></li>
+        <li class="nav-item"><a class="nav-link" href="#faq">よくある質問</a></li>
+        <li class="nav-item ms-lg-2">
+          <a class="nav-link nav-cta" href="https://line.me/R/ti/p/@474pqexj" target="_blank">
+            <i class="bi bi-chat-dots-fill"></i> 無料相談
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ヒーロー -->
+<section class="hero">
+  <div class="container position-relative" style="z-index:1">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <div class="hero-badge">🤖 AI × LINE × 動画制作</div>
+        <h1>AIが働く、<br><span class="accent">新しい時代へ。</span></h1>
+        <p>LINE Bot・動画制作・AI自動化で<br>あなたのビジネスを次のステージへ。<br>まずはLINEで無料相談からはじめましょう。</p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="https://line.me/R/ti/p/@474pqexj" target="_blank" class="btn-line">
+            <i class="bi bi-chat-dots-fill" style="font-size:1.2rem"></i>
+            LINEで無料相談する
+          </a>
+          <a href="#services" class="btn-line-outline">
+            サービスを見る <i class="bi bi-arrow-down"></i>
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="stat-num">3日〜</div>
+            <div class="stat-label">最短納品日数</div>
+          </div>
+          <div>
+            <div class="stat-num">3ヶ月</div>
+            <div class="stat-label">納品後サポート</div>
+          </div>
+          <div>
+            <div class="stat-num">¥0</div>
+            <div class="stat-label">相談・見積もり費用</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 d-none d-lg-flex justify-content-center align-items-center mt-5 mt-lg-0">
+        <div style="font-size:9rem;filter:drop-shadow(0 0 40px rgba(0,185,0,.3));user-select:none;">🤖</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- サービス一覧 -->
+<section id="services">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-label">Services</div>
+      <h2 class="section-title">提供サービス一覧</h2>
+      <p class="section-sub">中小企業の集客・業務効率化を、最新のAI技術でサポートします。</p>
+    </div>
+    <div class="row g-4">
+
+      <div class="col-md-6 col-lg-4 fade-up">
+        <div class="service-card">
+          <span class="badge-popular">人気 No.1</span>
+          <div class="service-icon">💬</div>
+          <h4 class="fw-bold mb-2" style="color:var(--navy)">LINE Bot 制作</h4>
+          <p class="text-muted small mb-0" style="line-height:1.8">
+            お客様からのLINEメッセージにAIが自動返信。問い合わせ対応・予約受付・決済リンク送信まで24時間対応します。
+          </p>
+          <div class="service-price">¥200,000〜</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 fade-up">
+        <div class="service-card">
+          <div class="service-icon">🎬</div>
+          <h4 class="fw-bold mb-2" style="color:var(--navy)">会社紹介動画制作</h4>
+          <p class="text-muted small mb-0" style="line-height:1.8">
+            採用・営業・SNS活用に使えるプロ品質の会社紹介動画を制作。企画から納品まで一貫対応します。
+          </p>
+          <div class="service-price">¥80,000〜</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 fade-up">
+        <div class="service-card">
+          <div class="service-icon">📱</div>
+          <h4 class="fw-bold mb-2" style="color:var(--navy)">SNS広告動画（単発）</h4>
+          <p class="text-muted small mb-0" style="line-height:1.8">
+            TikTok・Instagram・YouTubeに特化した短尺動画を制作。バズるコンテンツで新規顧客を獲得します。
+          </p>
+          <div class="service-price">¥50,000〜</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 fade-up">
+        <div class="service-card">
+          <div class="service-icon">🔧</div>
+          <h4 class="fw-bold mb-2" style="color:var(--navy)">LINE Bot 月額保守</h4>
+          <p class="text-muted small mb-0" style="line-height:1.8">
+            導入後のBot改善・機能追加・障害対応を月額で継続サポート。安心してLINE運用を任せられます。
+          </p>
+          <div class="service-price">¥50,000/月</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 fade-up">
+        <div class="service-card">
+          <span class="badge-popular">お得</span>
+          <div class="service-icon">🎁</div>
+          <h4 class="fw-bold mb-2" style="color:var(--navy)">モニターセット</h4>
+          <p class="text-muted small mb-0" style="line-height:1.8">
+            LINE Bot制作＋SNS動画制作をセットでご提供。モニター価格でお得に導入できる期間限定プランです。
+          </p>
+          <div class="service-price">¥150,000（特別価格）</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 fade-up">
+        <div class="service-card">
+          <div class="service-icon">💳</div>
+          <h4 class="fw-bold mb-2" style="color:var(--navy)">キャッシュレス決済導入</h4>
+          <p class="text-muted small mb-0" style="line-height:1.8">
+            Stripeを活用したオンライン決済・LINEからの決済リンク送信を構築。売上をデジタル化します。
+          </p>
+          <div class="service-price">要お見積もり</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- サービス後CTA -->
+    <div class="text-center mt-5 fade-up">
+      <p class="text-muted mb-3">どのサービスが合っているか迷ったら、まずご相談ください。</p>
+      <a href="https://line.me/R/ti/p/@474pqexj" target="_blank" class="btn-line">
+        <i class="bi bi-chat-dots-fill"></i> LINEで無料相談する
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 料金表 -->
+<section id="pricing" class="pricing-section">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">料金プラン</h2>
+      <p class="section-sub">初期費用・相談費用は0円。まずはお気軽にどうぞ。</p>
+    </div>
+    <div class="row g-4 justify-content-center">
+
+      <div class="col-sm-6 col-lg-4 fade-up">
+        <div class="price-card h-100">
+          <div class="price-card-header">
+            <div class="price-icon">💬</div>
+            <h4>LINE Bot 制作</h4>
+            <div class="amount">¥200,000<small>〜</small></div>
+            <div class="mt-1" style="font-size:.8rem;opacity:.8">一括払い・分割相談可</div>
+          </div>
+          <div class="price-card-body">
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>LINE Messaging API 設定</div>
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>キーワード自動返信</div>
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>決済リンク自動送信</div>
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>サーバー設定・本番導入</div>
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>納品後3ヶ月サポート</div>
+            <a href="https://buy.stripe.com/dRm3cx0ip8DK4AK6jX9Zm02" target="_blank" class="btn btn-outline-success w-100 mt-3 fw-bold rounded-pill">申し込む</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-4 fade-up">
+        <div class="price-card featured h-100">
+          <div class="price-card-header">
+            <div class="price-icon">🎁</div>
+            <h4>モニターセット <span style="font-size:.75rem;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:10px;">期間限定</span></h4>
+            <div class="amount">¥150,000<small>〜</small></div>
+            <div class="mt-1" style="font-size:.8rem;opacity:.8">通常 ¥250,000 → 特別価格</div>
+          </div>
+          <div class="price-card-body">
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>LINE Bot 制作（フル機能）</div>
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>SNS広告動画 1本</div>
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>Stripe 決済連携</div>
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>サーバー設定・本番導入</div>
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>納品後3ヶ月サポート</div>
+            <a href="https://buy.stripe.com/bJeaEZ6GN9HOc3c0ZD9Zm0e" target="_blank" class="btn btn-success w-100 mt-3 fw-bold rounded-pill">申し込む</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-4 fade-up">
+        <div class="price-card h-100">
+          <div class="price-card-header">
+            <div class="price-icon">🔧</div>
+            <h4>LINE 月額保守</h4>
+            <div class="amount">¥50,000<small>/月</small></div>
+            <div class="mt-1" style="font-size:.8rem;opacity:.8">月払い・いつでも解約可</div>
+          </div>
+          <div class="price-card-body">
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>Bot 改善・機能追加</div>
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>障害対応・バグ修正</div>
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>月次レポート提供</div>
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>LINE相談対応（無制限）</div>
+            <div class="price-feature"><i class="bi bi-check-circle-fill"></i>サーバー監視</div>
+            <a href="https://buy.stripe.com/cNi5kF8OVf284AKeQt9Zm0d" target="_blank" class="btn btn-outline-success w-100 mt-3 fw-bold rounded-pill">申し込む</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-4 text-muted small fade-up">
+      ※ 会社紹介動画（¥80,000〜）・SNS広告動画（¥50,000〜）は単品でもご依頼いただけます。<br>
+      詳しくはLINEにてご相談ください。
+    </div>
+  </div>
+</section>
+
+<!-- 導入の流れ -->
+<section id="flow" class="flow-section">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-label" style="color:#4ade80">Flow</div>
+      <h2 class="section-title">導入の流れ</h2>
+      <p class="section-sub">LINEを友だち追加するだけで、すぐにスタートできます。</p>
+    </div>
+    <div class="row g-4 justify-content-center position-relative">
+
+      <div class="col-6 col-md-3 fade-up">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-icon">📲</div>
+          <div class="flow-title">LINE 登録</div>
+          <div class="flow-desc">LINE IDをスキャン or 検索して友だち追加</div>
+          <div class="flow-arrow d-none d-md-block"><i class="bi bi-chevron-right"></i></div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3 fade-up">
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-icon">💬</div>
+          <div class="flow-title">無料相談</div>
+          <div class="flow-desc">ご要望・課題をLINEでお気軽にご相談</div>
+          <div class="flow-arrow d-none d-md-block"><i class="bi bi-chevron-right"></i></div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3 fade-up">
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-icon">⚙️</div>
+          <div class="flow-title">制作・開発</div>
+          <div class="flow-desc">お見積もり確定後、最短3日で着手</div>
+          <div class="flow-arrow d-none d-md-block"><i class="bi bi-chevron-right"></i></div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3 fade-up">
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-icon">🎉</div>
+          <div class="flow-title">納品・サポート</div>
+          <div class="flow-desc">納品後3ヶ月間のアフターサポート付き</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-5 fade-up">
+      <a href="https://line.me/R/ti/p/@474pqexj" target="_blank" class="btn-line">
+        <i class="bi bi-chat-dots-fill"></i> まずはLINEで相談する（無料）
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- よくある質問 -->
+<section id="faq" class="faq-section">
+  <div class="container" style="max-width:760px">
+    <div class="text-center">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">よくある質問</h2>
+      <p class="section-sub">ご不明な点はLINEでも気軽にご質問ください。</p>
+    </div>
+
+    <div class="accordion fade-up" id="faqAccordion">
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+            Q. 相談・見積もりは無料ですか？
+          </button>
+        </h2>
+        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            はい、完全無料です。LINEで「相談したい」とメッセージを送るだけでOKです。お気軽にどうぞ。
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+            Q. LINE Botの制作期間はどのくらいですか？
+          </button>
+        </h2>
+        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            ご要件によりますが、シンプルな自動返信Botであれば最短3〜5営業日での納品が可能です。カスタマイズが多い場合は2〜3週間ほどいただきます。
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+            Q. ITに詳しくなくても大丈夫ですか？
+          </button>
+        </h2>
+        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            まったく問題ありません。設定・導入・テストまでこちらで対応します。操作方法もLINEやZoomで丁寧にご説明します。
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+            Q. 納品後に内容を変更したい場合は？
+          </button>
+        </h2>
+        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            納品後3ヶ月以内の軽微な修正は無償で対応します。それ以降の改修や機能追加は「LINE月額保守（¥50,000/月）」をご活用ください。
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+            Q. 支払い方法は何が使えますか？
+          </button>
+        </h2>
+        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            クレジットカード（Stripe決済）および銀行振込に対応しています。分割払いのご相談もお気軽にLINEまでどうぞ。
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- LINE CTA バナー -->
+<section class="cta-section">
+  <div class="container">
+    <div class="mb-3" style="font-size:3rem">💬</div>
+    <h2>まずは無料で相談してみませんか？</h2>
+    <p class="mb-4" style="opacity:.9;font-size:1rem">
+      LINEで「相談したい」と送るだけでOK。<br>
+      担当者が丁寧にご対応します。
+    </p>
+    <a href="https://line.me/R/ti/p/@474pqexj" target="_blank" class="btn-line-white">
+      <i class="bi bi-chat-dots-fill" style="color:var(--green);font-size:1.3rem"></i>
+      LINEで無料相談する
+    </a>
+    <div class="mt-4" style="font-size:.88rem;opacity:.85">
+      LINE ID：<strong>@474pqexj</strong>
+    </div>
+  </div>
+</section>
+
+<!-- フッター -->
+<footer>
+  <div class="footer-logo">Ai<span>den</span>（エイデン）</div>
+  <p style="font-size:.88rem;margin-bottom:12px">AIが働く、新しい時代へ。</p>
+  <div class="footer-line">
+    <i class="bi bi-chat-dots-fill" style="color:var(--green)"></i>
+    LINE ID：@474pqexj
+  </div>
+  <div class="footer-links mb-3">
+    <a href="#services">サービス</a>
+    <a href="#pricing">料金</a>
+    <a href="#flow">導入の流れ</a>
+    <a href="#faq">よくある質問</a>
+    <a href="https://line.me/R/ti/p/@474pqexj" target="_blank">お問い合わせ</a>
+  </div>
+  <div style="font-size:.82rem;opacity:.5">© 2024 Aiden Inc. All rights reserved.</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // スクロールアニメーション
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
