@@ -487,6 +487,10 @@ _GUIDE_PAGES = {
     "ai-automation", "stripe", "line-maintenance", "line-setup",
 }
 
+@app.route("/guide")
+def guide_index():
+    return send_from_directory("static/guide", "index.html")
+
 @app.route("/guide/<page>")
 def guide(page):
     if page not in _GUIDE_PAGES:

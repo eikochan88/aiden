@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サービスガイド | Aiden</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    body { background: #f8f9fa; font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif; }
+    .hero { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; padding: 56px 24px; text-align: center; }
+    .hero .icon { font-size: 72px; margin-bottom: 16px; }
+    .service-card {
+      background: white; border-radius: 16px; padding: 28px 24px;
+      margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.07);
+      text-decoration: none; color: inherit; display: block;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .service-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.13); transform: translateY(-2px); color: inherit; }
+    .service-icon { font-size: 2.4rem; margin-bottom: 10px; }
+    .badge-price { background: #f0fdf4; color: #16a34a; border: 1px solid #86efac; font-size: .8rem; padding: 4px 10px; border-radius: 20px; }
+    .price-table th { background: #6366f1; color: white; }
+    .section-title { font-weight: 700; font-size: 1.15rem; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #e5e7eb; }
+    .contact-box { background: linear-gradient(135deg, #06C755 0%, #00A040 100%); color: white; border-radius: 16px; padding: 28px 24px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="icon">🤖</div>
+  <h1 class="h2 fw-bold mb-2">Aiden サービスガイド</h1>
+  <p class="mb-0 opacity-75">AI社員・自動化・LINE連携サービスの詳細はこちら</p>
+</div>
+
+<div class="container py-4" style="max-width:720px">
+
+  <!-- サービス一覧 -->
+  <p class="section-title mt-2"><i class="bi bi-grid-3x3-gap me-2"></i>サービス一覧</p>
+
+  <a href="/guide/ai-automation" class="service-card">
+    <div class="service-icon">🤖</div>
+    <div class="fw-bold fs-6 mb-1">AI 自動化サービス</div>
+    <div class="text-muted small mb-2">業務プロセスをAIで自動化。レポート生成・タスク管理・一括メッセージ送信など。</div>
+    <span class="badge-price">詳細を見る →</span>
+  </a>
+
+  <a href="/guide/line-bot" class="service-card">
+    <div class="service-icon">💬</div>
+    <div class="fw-bold fs-6 mb-1">LINE Bot 構築サービス</div>
+    <div class="text-muted small mb-2">LINE公式アカウントとAI社員を連携。自動返信・問い合わせ対応・予約受付。</div>
+    <span class="badge-price">詳細を見る →</span>
+  </a>
+
+  <a href="/guide/line-setup" class="service-card">
+    <div class="service-icon">⚙️</div>
+    <div class="fw-bold fs-6 mb-1">LINE Bot セットアップ</div>
+    <div class="text-muted small mb-2">LINE Messaging API の初期設定・Webhook 設定・本番環境への導入手順。</div>
+    <span class="badge-price">詳細を見る →</span>
+  </a>
+
+  <a href="/guide/line-maintenance" class="service-card">
+    <div class="service-icon">🔧</div>
+    <div class="fw-bold fs-6 mb-1">LINE Bot 保守・運用サービス</div>
+    <div class="text-muted small mb-2">導入後の継続サポート・改善提案・障害対応をお任せください。</div>
+    <span class="badge-price">詳細を見る →</span>
+  </a>
+
+  <a href="/guide/video-sns" class="service-card">
+    <div class="service-icon">📱</div>
+    <div class="fw-bold fs-6 mb-1">SNS 動画マーケティング</div>
+    <div class="text-muted small mb-2">TikTok・Instagram・YouTube向けの動画企画・制作・分析サービス。</div>
+    <span class="badge-price">詳細を見る →</span>
+  </a>
+
+  <a href="/guide/video-company" class="service-card">
+    <div class="service-icon">🎬</div>
+    <div class="fw-bold fs-6 mb-1">会社紹介動画制作</div>
+    <div class="text-muted small mb-2">プロによる会社紹介動画の企画・撮影・編集。採用・営業資料として活用。</div>
+    <span class="badge-price">詳細を見る →</span>
+  </a>
+
+  <a href="/guide/stripe" class="service-card">
+    <div class="service-icon">💳</div>
+    <div class="fw-bold fs-6 mb-1">Stripe 決済導入サービス</div>
+    <div class="text-muted small mb-2">Stripe を活用したオンライン決済システムの設計・導入・保守。</div>
+    <span class="badge-price">詳細を見る →</span>
+  </a>
+
+  <!-- 料金表 -->
+  <p class="section-title mt-4"><i class="bi bi-currency-yen me-2"></i>料金プラン</p>
+
+  <div class="bg-white rounded-4 p-3 mb-3 shadow-sm">
+    <table class="table table-bordered table-sm mb-0 text-center">
+      <thead>
+        <tr class="price-table">
+          <th>プラン</th>
+          <th>月額</th>
+          <th>主な内容</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fw-bold">ライト</td>
+          <td>¥29,800</td>
+          <td class="text-start">LINE Bot 基本機能・自動返信</td>
+        </tr>
+        <tr>
+          <td class="fw-bold">スタンダード</td>
+          <td>¥59,800</td>
+          <td class="text-start">AI社員連携・レポート生成・動画分析</td>
+        </tr>
+        <tr>
+          <td class="fw-bold">プレミアム</td>
+          <td>¥99,800</td>
+          <td class="text-start">フルカスタマイズ・専任サポート・Stripe 導入</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="text-muted small mt-2 mb-0">※ 初期費用・カスタマイズ費用は別途ご相談ください。</p>
+  </div>
+
+  <!-- お問い合わせ -->
+  <div class="contact-box mt-4">
+    <div class="fs-2 mb-2">💬</div>
+    <div class="fw-bold fs-5 mb-1">LINE でお問い合わせ</div>
+    <p class="opacity-90 small mb-3">ご質問・お見積もりはお気軽にどうぞ。<br>担当者が丁寧にご対応いたします。</p>
+    <a href="https://lin.ee/example" class="btn btn-light fw-bold px-4">
+      <i class="bi bi-chat-dots me-2"></i>LINE で相談する
+    </a>
+  </div>
+
+  <div class="text-center text-muted small py-4">
+    © 2024 Aiden Inc. All rights reserved.
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
