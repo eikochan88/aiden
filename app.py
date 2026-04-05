@@ -491,6 +491,10 @@ _GUIDE_PAGES = {
 def home():
     return send_from_directory("static", "index.html")
 
+@app.route("/hp")
+def hp():
+    return send_from_directory("static", "index.html")
+
 @app.route("/guide")
 def guide_index():
     return send_from_directory("static/guide", "index.html")
