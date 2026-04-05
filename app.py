@@ -1,8 +1,17 @@
 import os
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime
+from datetime import datetime, timedelta
+import pytz
 from flask import Flask, render_template, request, jsonify, redirect, url_for, send_from_directory
+from apscheduler.schedulers.background import BackgroundScheduler
+from linebot.v3.messaging import (
+    Configuration as LineConfig,
+    ApiClient as LineApiClient,
+    MessagingApi as LineMessagingApi,
+    PushMessageRequest,
+    TextMessage as LineTextMessage,
+)
 from models import db, Message, Report, Task
 from employees import get_all_employees, get_employee, chat_with_employee, generate_report
 
@@ -479,6 +488,145 @@ X（旧Twitter）/ Instagram / TikTok / YouTube / LinkedIn のうち
         "report_id": report.id,
         "video_url": video_url,
     })
+
+
+# ─── SNS自動投稿スケジューラー（山本彩） ──────────────────────
+
+_JST = pytz.timezone("Asia/Tokyo")
+
+_SNS_THEMES = {
+    1: ("LINEボット活用",
+        "LINEボットの活用事例・メリット（顧客対応自動化・24時間対応・売上増加事例など）"),
+    2: ("AI動画制作",
+        "AI動画制作の紹介・事例（会社紹介動画・SNS広告動画・最短3日納品など）"),
+    3: ("キャッシュレス決済",
+        "キャッシュレス決済導入のメリット（Stripe連携・LINE決済・売上デジタル化など）"),
+    0: ("エイデン全体紹介",
+        "エイデンのサービス全体紹介（打ち合わせゼロ・LINEだけで全完結・AI自動化）"),
+}
+
+
+def _line_push(text: str) -> None:
+    """EIKO_LINE_USER_ID にLINEプッシュメッセージを送る"""
+    token   = os.environ.get("LINE_CHANNEL_ACCESS_TOKEN", "")
+    user_id = os.environ.get("EIKO_LINE_USER_ID", "")
+    if not token or not user_id:
+        app.logger.warning("[SNS scheduler] LINE_CHANNEL_ACCESS_TOKEN または EIKO_LINE_USER_ID が未設定")
+        return
+    cfg = LineConfig(access_token=token)
+    with LineApiClient(cfg) as api_client:
+        LineMessagingApi(api_client).push_message(
+            PushMessageRequest(to=user_id, messages=[LineTextMessage(text=text)])
+        )
+
+
+def generate_and_send_sns_posts(force: bool = False) -> str:
+    """山本彩が今週のSNS投稿案3本を生成してEIKOのLINEに送信する"""
+    from employees import client as openai_client
+
+    with app.app_context():
+        now_jst = datetime.now(_JST)
+
+        # 今週すでに送信済みなら skip（force=True で上書き可）
+        if not force:
+            week_monday = (now_jst - timedelta(days=now_jst.weekday())).replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
+            week_monday_utc = week_monday.astimezone(pytz.utc).replace(tzinfo=None)
+            already = Report.query.filter(
+                Report.employee_id == "yamamoto",
+                Report.report_type == "sns_auto",
+                Report.created_at >= week_monday_utc,
+            ).first()
+            if already:
+                msg = "今週は既に送信済みです"
+                app.logger.info("[SNS scheduler] %s", msg)
+                return msg
+
+        # 週番号 % 4 でテーマローテーション
+        week_num = now_jst.isocalendar()[1]
+        theme_label, theme_detail = _SNS_THEMES[week_num % 4]
+
+        emp = get_employee("yamamoto")
+
+        prompt = f"""今週のSNS投稿案を3本作成してください。
+
+今週のテーマ：{theme_detail}
+
+以下の形式で出力してください：
+
+【投稿案①】Instagram向け
+（絵文字を多用・共感できるストーリー訴求・ハッシュタグ5〜8個付き）
+
+【投稿案②】X（Twitter）向け
+（140文字以内厳守・インパクトのある出だし・簡潔に刺さる表現）
+
+【投稿案③】Facebook向け
+（200〜300文字・ビジネス向けトーン・具体的な数字や事例を含める・最後にエイデンのLINEリンク https://line.me/R/ti/p/@474pqexj を自然に添える）
+
+山本彩らしい明るく前向きなトーンで仕上げてください！"""
+
+        response = openai_client.chat.completions.create(
+            model="gpt-4o-mini",
+            max_tokens=1500,
+            messages=[
+                {"role": "system", "content": emp["system_prompt"]},
+                {"role": "user", "content": prompt},
+            ],
+        )
+        posts_content = response.choices[0].message.content
+
+        # LINE送信メッセージを組み立て
+        line_msg = (
+            f"📱 山本彩より今週のSNS投稿案です！\n\n"
+            f"今週のテーマ：{theme_label}\n"
+            f"━━━━━━━━━━━━━━━━\n\n"
+            f"{posts_content}\n\n"
+            f"━━━━━━━━━━━━━━━━\n"
+            f"気に入ったものをそのまま投稿してください😊"
+        )
+        _line_push(line_msg)
+
+        # Report として保存（重複送信防止兼ログ）
+        db.session.add(Report(
+            employee_id="yamamoto",
+            report_type="sns_auto",
+            title=f"山本 彩｜SNS投稿案 {now_jst.strftime('%Y/%m/%d')}（テーマ：{theme_label}）",
+            content=posts_content,
+        ))
+        db.session.commit()
+
+        app.logger.info("[SNS scheduler] 投稿案を送信しました（テーマ: %s）", theme_label)
+        return posts_content
+
+
+# 毎週月曜 9:00 JST に自動実行
+_scheduler = BackgroundScheduler(timezone=_JST)
+_scheduler.add_job(
+    generate_and_send_sns_posts,
+    trigger="cron",
+    day_of_week="mon",
+    hour=9,
+    minute=0,
+    id="sns_weekly",
+    replace_existing=True,
+    misfire_grace_time=3600,
+)
+_scheduler.start()
+
+
+# ─── SNS投稿案 手動実行 API ──────────────────────────────────
+@app.route("/api/sns/generate", methods=["POST"])
+def api_sns_generate():
+    """山本彩のSNS投稿案生成を手動実行。force=true で重複チェックをスキップ"""
+    data  = request.get_json() or {}
+    force = data.get("force", False)
+    try:
+        result = generate_and_send_sns_posts(force=force)
+        return jsonify({"ok": True, "content": result})
+    except Exception as e:
+        app.logger.exception("[SNS generate] エラー")
+        return jsonify({"error": str(e)}), 500
 
 
 # ─── ガイドページ ─────────────────────────────────────────────
