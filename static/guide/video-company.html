@@ -12,6 +12,11 @@
     .hero .icon { font-size: 64px; margin-bottom: 16px; }
     .card-guide { background: white; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
     .step-num { background: #6366f1; color: white; width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; }
+    /* 動画・iframe の保護 */
+    .video-wrap { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; background: #000; }
+    .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+    .video-wrap video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; -webkit-touch-callout: none; }
+    .video-label { font-size: 12px; color: #888; margin-top: 6px; }
   </style>
 </head>
 <body>
@@ -59,10 +64,41 @@
   </div>
 
   <div class="card-guide">
+    <h5 class="fw-bold mb-3"><i class="bi bi-play-circle-fill text-primary me-2"></i>サンプル動画</h5>
+    <p class="text-muted mb-3" style="font-size:14px;">実際の制作事例をご覧いただけます。動画はストリーミング再生専用です。</p>
+    <!-- YouTube 限定公開 URL をここに設定してください -->
+    <div class="video-wrap mb-2">
+      <iframe
+        src="https://www.youtube.com/embed/COMPANY_VIDEO_ID?rel=0&modestbranding=1"
+        title="会社紹介動画 サンプル"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        oncontextmenu="return false">
+      </iframe>
+    </div>
+    <p class="video-label">※ 動画のダウンロード・保存はできません。閲覧専用です。</p>
+  </div>
+
+  <div class="card-guide">
     <h5 class="fw-bold mb-3"><i class="bi bi-telephone-fill text-success me-2"></i>担当者連絡先</h5>
     <p class="mb-0">ご不明点は担当の山本 彩（SNS・動画担当）までご連絡ください。</p>
   </div>
 
 </div>
+
+<script>
+  /* ── ダウンロード・保存防止 ── */
+  document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+  document.addEventListener('dragstart', function(e) { e.preventDefault(); });
+  document.addEventListener('touchstart', function(e) {
+    if (e.target.tagName === 'VIDEO' || e.target.tagName === 'IFRAME' || e.target.tagName === 'IMG') {
+      e.preventDefault();
+    }
+  }, { passive: false });
+  document.querySelectorAll('video').forEach(function(v) {
+    v.setAttribute('controlslist', 'nodownload');
+    v.setAttribute('oncontextmenu', 'return false');
+  });
+</script>
 </body>
 </html>

@@ -32,6 +32,10 @@ GUIDE_URL = "https://aiden-1e0e.onrender.com/guide"
 # ── キーワード ──────────────────────────────────────────────────
 KEYWORDS = ["サービス詳細", "料金", "メニュー"]
 PAYMENT_KEYWORDS = ["申し込む", "決済", "支払い"]
+SAMPLE_KEYWORDS = ["サンプル", "事例", "実績", "どんな動画"]
+
+SAMPLE_COMPANY_URL = "https://aiden-1e0e.onrender.com/guide/video-company"
+SAMPLE_SNS_URL     = "https://aiden-1e0e.onrender.com/guide/video-sns"
 
 # ── サービス案内（ガイドURL含まず）──────────────────────────────
 SERVICE_INFO = """【Aidenのサービス一覧】
@@ -242,6 +246,16 @@ def handle_message(event):
         sess.updated_at = datetime.utcnow()
         db.session.commit()
         reply_text(reply_token, SERVICE_SELECT_MSG)
+
+    elif any(kw in user_text for kw in SAMPLE_KEYWORDS):
+        reply_text(reply_token, (
+            "サンプル動画はこちらからご覧いただけます👇\n"
+            "動画はストリーミング再生のみ対応しています。\n\n"
+            "🎬 会社紹介動画のサンプル\n"
+            f"{SAMPLE_COMPANY_URL}\n\n"
+            "📱 SNS広告動画のサンプル\n"
+            f"{SAMPLE_SNS_URL}"
+        ))
 
     elif any(kw in user_text for kw in KEYWORDS):
         reply_text(reply_token, SERVICE_INFO)
