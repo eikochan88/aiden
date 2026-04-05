@@ -192,8 +192,8 @@
       z-index: 9999;
       display: none;
       animation: slideUp .5s cubic-bezier(.34,1.56,.64,1);
-      max-width: 300px;
-      width: calc(100vw - 48px);
+      max-width: 380px;
+      width: calc(100vw - 32px);
     }
     #avatar-popup.show { display: block; }
     @keyframes slideUp {
@@ -247,17 +247,21 @@
     }
     .avatar-close:hover { background: rgba(255,255,255,.3); }
     .avatar-bubble {
-      padding: 16px;
+      padding: 12px;
     }
-    .avatar-bubble p {
-      font-size: .9rem;
-      line-height: 1.7;
-      color: var(--text);
+    .avatar-video {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: 10px;
+      overflow: hidden;
       margin-bottom: 12px;
-      background: #f0fdf4;
-      border-radius: 12px;
-      padding: 12px 14px;
-      border-left: 3px solid var(--green);
+      background: #000;
+    }
+    .avatar-video iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
     }
     .avatar-bubble .btn-avatar-line {
       display: flex;
@@ -773,7 +777,14 @@
       <button class="avatar-close" id="avatar-close-btn" aria-label="閉じる">✕</button>
     </div>
     <div class="avatar-bubble">
-      <p>こんにちは！エイデンのあいちゃんです😊打ち合わせなし・LINEだけで全部お任せください！</p>
+      <div class="avatar-video">
+        <iframe
+          src="https://app.heygen.com/videos/hp-01750d5ca30445578b03fa28754b556b"
+          allowfullscreen
+          allow="autoplay; fullscreen"
+          title="あいちゃんからのご挨拶"
+        ></iframe>
+      </div>
       <a href="https://line.me/R/ti/p/@474pqexj" target="_blank" class="btn-avatar-line">
         <i class="bi bi-chat-dots-fill"></i> LINEで話しかける
       </a>
