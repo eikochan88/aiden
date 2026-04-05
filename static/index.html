@@ -503,6 +503,67 @@
       color: var(--text);
     }
 
+    /* ── 選ばれる3つの理由 ── */
+    .reasons-section { background: var(--navy); color: var(--white); }
+    .reasons-section .section-title { color: var(--white); }
+    .reasons-section .section-sub { color: rgba(255,255,255,.6); }
+    .reason-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 20px;
+      padding: 36px 28px;
+      height: 100%;
+      transition: background .25s, border-color .25s, transform .25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .reason-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--reason-color, var(--green));
+      transform: scaleX(0);
+      transition: transform .3s;
+    }
+    .reason-card:hover {
+      background: rgba(255,255,255,.1);
+      border-color: var(--reason-color, var(--green));
+      transform: translateY(-4px);
+    }
+    .reason-card:hover::before { transform: scaleX(1); }
+    .reason-num {
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--reason-color, var(--green));
+      opacity: .25;
+      position: absolute;
+      top: 16px; right: 20px;
+      font-family: 'Arial Black', sans-serif;
+    }
+    .reason-icon {
+      font-size: 2.4rem;
+      margin-bottom: 16px;
+    }
+    .reason-title {
+      font-size: 1.15rem;
+      font-weight: 900;
+      margin-bottom: 12px;
+      color: var(--white);
+    }
+    .reason-title .highlight {
+      color: var(--reason-color, var(--green));
+    }
+    .reason-desc {
+      font-size: .9rem;
+      color: rgba(255,255,255,.7);
+      line-height: 1.8;
+    }
+    .reason-c1 { --reason-color: #4ade80; }
+    .reason-c2 { --reason-color: #60a5fa; }
+    .reason-c3 { --reason-color: #f59e0b; }
+
     /* ── 会社概要 ── */
     .company-section { background: var(--white); }
     .company-table {
@@ -1000,6 +1061,66 @@
           <div class="accordion-body">
             納品後3ヶ月以内の軽微な修正は無償で対応します。それ以降の改修や機能追加は「LINE月額保守（¥50,000/月）」をご活用ください。もちろん変更のご連絡もLINEだけでOKです。
           </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+            Q. 突然サービスが終了したりしませんか？
+          </button>
+        </h2>
+        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            エイデンはAIが中心で動いているため、人手不足による廃業リスクがありません。2024年にHP制作会社の倒産が急増していますが、エイデンは24時間365日稼働するAIシステムで運営しているため、突然連絡が取れなくなるということがありません。
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 選ばれる3つの理由 -->
+<section id="reasons" class="reasons-section">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-label" style="color:#4ade80">Why Aiden</div>
+      <h2 class="section-title">選ばれる3つの理由</h2>
+      <p class="section-sub">なぜ、エイデンが選ばれるのか。</p>
+    </div>
+    <div class="row g-4">
+
+      <div class="col-md-4 fade-up reason-c1">
+        <div class="reason-card">
+          <div class="reason-num">01</div>
+          <div class="reason-icon">🛡️</div>
+          <div class="reason-title"><span class="highlight">廃業リスクゼロ</span></div>
+          <p class="reason-desc">
+            2024年、HP制作会社・Web制作会社の倒産が急増。エイデンはAIで動くため、人手不足倒産がありません。長期的に安心してお任せください。
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4 fade-up reason-c2">
+        <div class="reason-card">
+          <div class="reason-num">02</div>
+          <div class="reason-icon">📱</div>
+          <div class="reason-title"><span class="highlight">打ち合わせゼロ</span></div>
+          <p class="reason-desc">
+            お忙しい社長のために、全てLINEで完結。電話・メール・来社不要。番号を選ぶだけで申し込みから納品まで完了します。
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4 fade-up reason-c3">
+        <div class="reason-card">
+          <div class="reason-num">03</div>
+          <div class="reason-icon">⚡</div>
+          <div class="reason-title"><span class="highlight">スピード納品</span></div>
+          <p class="reason-desc">
+            通常の制作会社より圧倒的に速い。AIが動くから、会社紹介動画も最短3営業日で納品。スピードが、チャンスを逃しません。
+          </p>
         </div>
       </div>
 
