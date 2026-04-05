@@ -754,19 +754,19 @@
   }
 </style>
 
-<!-- AIアバター Aoiポップアップ -->
-<div id="avatar-popup" role="dialog" aria-label="エイデンAoiからのご挨拶">
+<!-- AIアバター あいちゃんポップアップ -->
+<div id="avatar-popup" role="dialog" aria-label="エイデンあいちゃんからのご挨拶">
   <div class="avatar-card">
     <div class="avatar-header">
       <div class="avatar-icon">🤖</div>
       <div class="avatar-name">
-        Aoi（エイデン）
+        あいちゃん（エイデン）
         <small>AIアシスタント</small>
       </div>
       <button class="avatar-close" id="avatar-close-btn" aria-label="閉じる">✕</button>
     </div>
     <div class="avatar-bubble">
-      <p>こんにちは！エイデンのAoiです😊<br>打ち合わせゼロで、LINEだけで何でもお任せいただけます。お気軽にLINEでご相談ください！</p>
+      <p>こんにちは！エイデンのあいちゃんです😊打ち合わせなし・LINEだけで全部お任せください！</p>
       <a href="https://line.me/R/ti/p/@474pqexj" target="_blank" class="btn-avatar-line">
         <i class="bi bi-chat-dots-fill"></i> LINEで話しかける
       </a>
@@ -1213,7 +1213,7 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-  // AIアバター Aoi ポップアップ（3秒後に自動表示）
+  // AIアバター あいちゃん ポップアップ（3秒後に自動表示）
   const popup = document.getElementById('avatar-popup');
   const closeBtn = document.getElementById('avatar-close-btn');
 
