@@ -30,91 +30,144 @@ EIKO_LINE_USER_ID = os.environ.get("EIKO_LINE_USER_ID", "")
 GUIDE_URL = "https://aiden-1e0e.onrender.com/guide"
 
 # ── キーワード ──────────────────────────────────────────────────
-KEYWORDS = ["サービス詳細", "料金", "メニュー"]
+KEYWORDS        = ["サービス詳細", "料金", "メニュー", "こんにちは", "はじめまして"]
 PAYMENT_KEYWORDS = ["申し込む", "決済", "支払い"]
-SAMPLE_KEYWORDS = ["サンプル", "事例", "実績", "どんな動画"]
+SAMPLE_KEYWORDS  = ["サンプル", "事例", "実績", "どんな動画"]
 
 SAMPLE_COMPANY_URL = "https://aiden-1e0e.onrender.com/guide/video-company"
 SAMPLE_SNS_URL     = "https://aiden-1e0e.onrender.com/guide/video-sns"
 
-# ── サービス案内（ガイドURL含まず）──────────────────────────────
-SERVICE_INFO = """【Aidenのサービス一覧】
-
-💬 LINEボット制作 ¥200,000
-　AIチャットボット・自動応答・予約システムなど
-
-🎬 会社紹介動画 ¥80,000
-　プロ撮影・編集・BGM付きの企業PR動画
-
-📱 SNS広告動画（単発）¥50,000
-　TikTok/Instagram対応の縦型ショート動画
-
-🔧 LINE月額保守 ¥50,000/月
-　運用・更新・サポート込みの安心パック
-
-🎁 モニターセット ¥150,000
-　LINEボット＋動画のお得なセット
-
-ご興味がございましたら「申し込む」とご返信ください。
-決済リンクをお送りします！"""
-
-SERVICE_SELECT_MSG = """【サービスを選択してください】
-
-ご希望のサービスを番号でお答えください👇
+# ── サービス選択メッセージ ────────────────────────────────────
+SERVICE_SELECT_MSG = """どのサービスにご興味がありますか？
 
 1️⃣ LINEボット制作 ¥200,000
 2️⃣ 会社紹介動画 ¥80,000
-3️⃣ SNS広告動画（単発）¥50,000
-4️⃣ LINE月額保守 ¥50,000/月
-5️⃣ モニターセット ¥150,000"""
+3️⃣ SNS広告動画 ¥50,000〜
+4️⃣ キャッシュレス決済導入 ¥50,000
+5️⃣ モニター限定セット ¥150,000
+6️⃣ その他・相談したい
+
+番号を送ってください😊"""
 
 # ── サービス番号マッピング ────────────────────────────────────
 SERVICE_NUMBER_MAP = {
     "1": "line_bot",
     "2": "company_video",
     "3": "sns_video",
-    "4": "maintenance",
+    "4": "payment",
     "5": "monitor_set",
+    "6": "other",
 }
 
 # ── サービス別決済リンク ──────────────────────────────────────
 PAYMENT_LINKS = {
-    "line_bot":      ("💬 LINEボット制作 ¥200,000",    "https://buy.stripe.com/dRm3cx0ip8DK4AK6jX9Zm02"),
-    "company_video": ("🎬 会社紹介動画 ¥80,000",        "https://buy.stripe.com/8x2cN73uBbPWd7gbEh9Zm00"),
-    "sns_video":     ("📱 SNS広告動画（単発）¥50,000",  "https://buy.stripe.com/aFa001aX3g6c9V4aAd9Zm0a"),
-    "maintenance":   ("🔧 LINE月額保守 ¥50,000/月",     "https://buy.stripe.com/cNi5kF8OVf284AKeQt9Zm0d"),
-    "monitor_set":   ("🎁 モニターセット ¥150,000",      "https://buy.stripe.com/bJeaEZ6GN9HOc3c0ZD9Zm0e"),
-}
-
-# ── ヒアリング質問（シンプル2問のみ）────────────────────────
-HEARING_QUESTIONS = {
-    "company_video": [
-        "【素材①/2】\n会社のHPのURLを教えてください😊\n（HPがなければSNSのURLでもOKです！）",
-        "【素材②/2】\n会社ロゴをこのLINEに送ってください📎\n（HPに載っていれば不要です！）",
-    ],
-    "sns_video": [
-        "【素材①/2】\n会社のHPのURLを教えてください😊\n（HPがなければSNSのURLでもOKです！）",
-        "【素材②/2】\n会社ロゴをこのLINEに送ってください📎\n（HPに載っていれば不要です！）",
-    ],
-}
-
-HEARING_LABELS = {
-    "company_video": [
-        "HP・SNS URL",
-        "会社ロゴ",
-    ],
-    "sns_video": [
-        "HP・SNS URL",
-        "会社ロゴ",
-    ],
+    "line_bot":      ("💬 LINEボット制作 ¥200,000",        "https://buy.stripe.com/dRm3cx0ip8DK4AK6jX9Zm02"),
+    "company_video": ("🎬 会社紹介動画 ¥80,000",            "https://buy.stripe.com/8x2cN73uBbPWd7gbEh9Zm00"),
+    "sns_video":     ("📱 SNS広告動画（単発）¥50,000",      "https://buy.stripe.com/aFa001aX3g6c9V4aAd9Zm0a"),
+    "payment":       ("💳 キャッシュレス決済導入 ¥50,000",  "https://buy.stripe.com/cNi5kF8OVf284AKeQt9Zm0d"),
+    "monitor_set":   ("🎁 モニター限定セット ¥150,000",      "https://buy.stripe.com/bJeaEZ6GN9HOc3c0ZD9Zm0e"),
 }
 
 SERVICE_NAMES = {
     "line_bot":      "LINEボット制作",
     "company_video": "会社紹介動画",
     "sns_video":     "SNS広告動画",
-    "maintenance":   "LINE月額保守",
-    "monitor_set":   "モニターセット",
+    "payment":       "キャッシュレス決済導入",
+    "monitor_set":   "モニター限定セット",
+    "other":         "その他・ご相談",
+}
+
+# ── ヒアリングフロー定義 ──────────────────────────────────────
+# type: "select" → 番号選択（options リストから選ぶ）
+# type: "free"   → 自由記述
+HEARING_FLOW = {
+    "company_video": [
+        {
+            "type": "select",
+            "label": "動画の雰囲気",
+            "text": (
+                "動画の雰囲気はどれが近いですか？\n\n"
+                "1️⃣ クール・スタイリッシュ\n"
+                "2️⃣ 温かい・親しみやすい\n"
+                "3️⃣ 元気・明るい\n"
+                "4️⃣ 高級感・プロフェッショナル\n\n"
+                "番号を送ってください😊"
+            ),
+            "options": ["クール・スタイリッシュ", "温かい・親しみやすい", "元気・明るい", "高級感・プロフェッショナル"],
+        },
+        {
+            "type": "select",
+            "label": "動画の長さ",
+            "text": (
+                "動画の長さはどれにしますか？\n\n"
+                "1️⃣ 30秒\n"
+                "2️⃣ 1分\n"
+                "3️⃣ 2分\n\n"
+                "番号を送ってください😊"
+            ),
+            "options": ["30秒", "1分", "2分"],
+        },
+        {
+            "type": "free",
+            "label": "HP・SNS URL",
+            "text": "会社のHPのURLを教えてください🌐\n（なければSNSのURLでもOKです）",
+        },
+        {
+            "type": "free",
+            "label": "一言コメント",
+            "text": "最後に、伝えたいことがあれば一言どうぞ✨\n（なければ「なし」でOKです）",
+        },
+    ],
+    "sns_video": [
+        {
+            "type": "select",
+            "label": "動画の雰囲気",
+            "text": (
+                "動画の雰囲気はどれが近いですか？\n\n"
+                "1️⃣ クール・スタイリッシュ\n"
+                "2️⃣ 温かい・親しみやすい\n"
+                "3️⃣ 元気・明るい\n"
+                "4️⃣ 高級感・プロフェッショナル\n\n"
+                "番号を送ってください😊"
+            ),
+            "options": ["クール・スタイリッシュ", "温かい・親しみやすい", "元気・明るい", "高級感・プロフェッショナル"],
+        },
+        {
+            "type": "select",
+            "label": "動画の長さ",
+            "text": (
+                "動画の長さはどれにしますか？\n\n"
+                "1️⃣ 15秒\n"
+                "2️⃣ 30秒\n"
+                "3️⃣ 60秒\n\n"
+                "番号を送ってください😊"
+            ),
+            "options": ["15秒", "30秒", "60秒"],
+        },
+        {
+            "type": "select",
+            "label": "投稿SNS",
+            "text": (
+                "投稿するSNSはどれですか？\n\n"
+                "1️⃣ Instagram\n"
+                "2️⃣ TikTok\n"
+                "3️⃣ X（旧Twitter）\n"
+                "4️⃣ YouTube\n\n"
+                "番号を送ってください😊"
+            ),
+            "options": ["Instagram", "TikTok", "X（旧Twitter）", "YouTube"],
+        },
+        {
+            "type": "free",
+            "label": "HP・SNS URL",
+            "text": "会社のHPのURLを教えてください🌐\n（なければSNSのURLでもOKです）",
+        },
+        {
+            "type": "free",
+            "label": "一言コメント",
+            "text": "最後に、伝えたいことがあれば一言どうぞ✨\n（なければ「なし」でOKです）",
+        },
+    ],
 }
 
 # ── DB モデル ─────────────────────────────────────────────────
@@ -127,7 +180,7 @@ class UserSession(db.Model):
     state         = db.Column(db.String(32), default="idle", nullable=False)
     service_type  = db.Column(db.String(32), nullable=True)
     hearing_step  = db.Column(db.Integer, default=0)
-    # JSON: {"answers": ["回答1", "回答2", ...]}
+    # JSON: {"answers": [{"label": "...", "value": "..."}]}
     hearing_data  = db.Column(db.Text, default="{}")
     updated_at    = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -182,10 +235,10 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
-    user_text     = event.message.text.strip()
-    line_user_id  = event.source.user_id
-    reply_token   = event.reply_token
-    sess          = get_or_create_session(line_user_id)
+    user_text    = event.message.text.strip()
+    line_user_id = event.source.user_id
+    reply_token  = event.reply_token
+    sess         = get_or_create_session(line_user_id)
 
     # ── ヒアリング中：回答を受け付ける ────────────────────────
     if sess.state == "hearing":
@@ -194,25 +247,12 @@ def handle_message(event):
 
     # ── サービス選択中：番号を受け付ける ──────────────────────
     if sess.state == "selecting_service":
-        service_key = SERVICE_NUMBER_MAP.get(user_text)
-        if service_key:
-            label, url = PAYMENT_LINKS[service_key]
-            sess.service_type = service_key
-            sess.state        = "awaiting_payment"
-            sess.updated_at   = datetime.utcnow()
-            db.session.commit()
-            reply_text(reply_token, (
-                f"ありがとうございます！\n{label} の決済リンクをお送りします👇\n\n"
-                f"{url}\n\n"
-                "お支払い完了後、自動でご確認メッセージをお送りします。"
-            ))
-        else:
-            reply_text(reply_token, "1〜5の番号でお答えください。\n\n" + SERVICE_SELECT_MSG)
+        _handle_service_selection(sess, user_text, reply_token)
         return
 
     # ── 支払い待ち中：リマインド ───────────────────────────────
     if sess.state == "awaiting_payment":
-        label, url = PAYMENT_LINKS.get(sess.service_type, ("", ""))
+        _, url = PAYMENT_LINKS.get(sess.service_type, ("", ""))
         reply_text(reply_token, (
             "お支払いの確認待ちです。\n"
             "以下のリンクよりお手続きください👇\n\n"
@@ -221,7 +261,7 @@ def handle_message(event):
         return
 
     # ── 通常キーワード処理 ────────────────────────────────────
-    if any(kw in user_text for kw in PAYMENT_KEYWORDS):
+    if any(kw in user_text for kw in PAYMENT_KEYWORDS) or any(kw in user_text for kw in KEYWORDS):
         sess.state      = "selecting_service"
         sess.updated_at = datetime.utcnow()
         db.session.commit()
@@ -230,41 +270,89 @@ def handle_message(event):
     elif any(kw in user_text for kw in SAMPLE_KEYWORDS):
         reply_text(reply_token, (
             "サンプル動画はこちらからご覧いただけます👇\n"
-            "動画はストリーミング再生のみ対応しています。\n\n"
-            "🎬 会社紹介動画のサンプル\n"
-            f"{SAMPLE_COMPANY_URL}\n\n"
-            "📱 SNS広告動画のサンプル\n"
-            f"{SAMPLE_SNS_URL}"
+            "（ストリーミング再生のみ対応）\n\n"
+            f"🎬 会社紹介動画\n{SAMPLE_COMPANY_URL}\n\n"
+            f"📱 SNS広告動画\n{SAMPLE_SNS_URL}"
         ))
 
-    elif any(kw in user_text for kw in KEYWORDS):
-        reply_text(reply_token, SERVICE_INFO)
+
+def _handle_service_selection(sess: UserSession, user_text: str, reply_token: str):
+    """サービス番号選択を処理する"""
+    service_key = SERVICE_NUMBER_MAP.get(user_text)
+
+    if not service_key:
+        reply_text(reply_token, "1〜6の番号でお答えください😊\n\n" + SERVICE_SELECT_MSG)
+        return
+
+    if service_key == "other":
+        sess.state      = "idle"
+        sess.updated_at = datetime.utcnow()
+        db.session.commit()
+        reply_text(reply_token, (
+            "ご相談内容をそのままLINEにお送りください😊\n"
+            "担当者よりご連絡いたします！"
+        ))
+        return
+
+    label, url = PAYMENT_LINKS[service_key]
+    sess.service_type = service_key
+    sess.state        = "awaiting_payment"
+    sess.updated_at   = datetime.utcnow()
+    db.session.commit()
+    reply_text(reply_token, (
+        f"ありがとうございます！\n\n"
+        f"{label} の決済リンクをお送りします👇\n\n"
+        f"{url}\n\n"
+        "お支払い完了後、自動でご確認メッセージをお送りします✅"
+    ))
 
 
 def _handle_hearing_answer(sess: UserSession, answer: str, reply_token: str):
     """ヒアリングの回答を保存し、次の質問または完了処理を行う"""
+    flow = HEARING_FLOW.get(sess.service_type, [])
+    step = sess.hearing_step
+
+    if step >= len(flow):
+        return
+
+    current_q = flow[step]
+
+    # 番号選択式の場合：バリデーション → 選択肢テキストに変換
+    if current_q["type"] == "select":
+        options = current_q["options"]
+        if answer.isdigit() and 1 <= int(answer) <= len(options):
+            resolved = options[int(answer) - 1]
+        else:
+            # 無効な入力：再質問
+            nums = "・".join(str(i) for i in range(1, len(options) + 1))
+            reply_text(reply_token,
+                f"{nums} の番号で送ってください😊\n\n" + current_q["text"]
+            )
+            return
+    else:
+        resolved = answer  # 自由記述はそのまま保存
+
+    # 回答を保存
     data    = json.loads(sess.hearing_data or "{}")
     answers = data.get("answers", [])
-    answers.append(answer)
-    data["answers"]    = answers
-    sess.hearing_data  = json.dumps(data, ensure_ascii=False)
-    sess.hearing_step  = len(answers)
-    sess.updated_at    = datetime.utcnow()
+    answers.append({"label": current_q["label"], "value": resolved})
+    data["answers"]   = answers
+    sess.hearing_data = json.dumps(data, ensure_ascii=False)
+    sess.hearing_step = step + 1
+    sess.updated_at   = datetime.utcnow()
 
-    questions = HEARING_QUESTIONS.get(sess.service_type, [])
-
-    if len(answers) < len(questions):
+    if sess.hearing_step < len(flow):
         # 次の質問を送る
         db.session.commit()
-        reply_text(reply_token, questions[len(answers)])
+        reply_text(reply_token, flow[sess.hearing_step]["text"])
     else:
         # ヒアリング完了
-        sess.state     = "completed"
+        sess.state    = "completed"
         db.session.commit()
         reply_text(reply_token,
-            "✅ ヒアリング完了しました！\n制作を開始します。\n\n"
-            "ご回答ありがとうございました。\n"
-            "担当者よりあらためてご連絡いたします。"
+            "✅ ヒアリング完了しました！\n制作を開始します🎬\n\n"
+            "ご協力ありがとうございました。\n"
+            "担当者よりあらためてご連絡いたします😊"
         )
         _forward_hearing_to_admin(sess, answers)
 
@@ -274,13 +362,11 @@ def _forward_hearing_to_admin(sess: UserSession, answers: list):
     if not EIKO_LINE_USER_ID:
         return
 
-    labels   = HEARING_LABELS.get(sess.service_type, [])
     svc_name = SERVICE_NAMES.get(sess.service_type, sess.service_type)
-
     lines = [f"📋【ヒアリング結果】{svc_name}", f"LINE ID: {sess.line_user_id}", ""]
-    for i, (label, ans) in enumerate(zip(labels, answers), 1):
-        lines.append(f"Q{i}. {label}")
-        lines.append(f"→ {ans}")
+    for i, item in enumerate(answers, 1):
+        lines.append(f"Q{i}. {item['label']}")
+        lines.append(f"→ {item['value']}")
         lines.append("")
 
     push_text(EIKO_LINE_USER_ID, "\n".join(lines).strip())
@@ -318,18 +404,18 @@ def _on_payment_completed():
                 f"詳細はガイドページをご確認ください👇\n{GUIDE_URL}"
             ))
 
-            if sess.service_type in HEARING_QUESTIONS:
-                # ヒアリングが必要なサービス：最初の質問を送る
+            if sess.service_type in HEARING_FLOW:
+                # ヒアリング開始
                 sess.state        = "hearing"
                 sess.hearing_step = 0
                 sess.hearing_data = json.dumps({"answers": []})
                 sess.updated_at   = datetime.utcnow()
                 db.session.commit()
 
-                first_q = HEARING_QUESTIONS[sess.service_type][0]
+                first_q = HEARING_FLOW[sess.service_type][0]
                 push_text(sess.line_user_id, (
                     "たったこれだけでOKです！\nあとはエイデンが全部準備します😊\n\n"
-                    + first_q
+                    + first_q["text"]
                 ))
             else:
                 sess.state      = "completed"
