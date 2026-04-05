@@ -1,4 +1,5 @@
 import os
+import json
 import stripe
 from flask import Flask, request, abort
 from flask_sqlalchemy import SQLAlchemy
@@ -24,13 +25,15 @@ configuration = Configuration(access_token=os.environ["LINE_CHANNEL_ACCESS_TOKEN
 handler = WebhookHandler(os.environ["LINE_CHANNEL_SECRET"])
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY", "")
 STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+EIKO_LINE_USER_ID = os.environ.get("EIKO_LINE_USER_ID", "")
 
 GUIDE_URL = "https://aiden-1e0e.onrender.com/guide"
 
+# ── キーワード ──────────────────────────────────────────────────
 KEYWORDS = ["サービス詳細", "料金", "メニュー"]
 PAYMENT_KEYWORDS = ["申し込む", "決済", "支払い"]
 
-# ガイドURLはここには含めない（入金確認後に送る）
+# ── サービス案内（ガイドURL含まず）──────────────────────────────
 SERVICE_INFO = """【Aidenのサービス一覧】
 
 💬 LINEボット制作 ¥200,000
@@ -51,39 +54,136 @@ SERVICE_INFO = """【Aidenのサービス一覧】
 ご興味がございましたら「申し込む」とご返信ください。
 決済リンクをお送りします！"""
 
-PAYMENT_MENU = """【お申し込みメニュー】
+SERVICE_SELECT_MSG = """【サービスを選択してください】
 
-ご希望のサービスをお選びいただき、リンクよりお手続きください。
+ご希望のサービスを番号でお答えください👇
 
-💬 LINEボット制作 ¥200,000
-https://buy.stripe.com/dRm3cx0ip8DK4AK6jX9Zm02
+1️⃣ LINEボット制作 ¥200,000
+2️⃣ 会社紹介動画 ¥80,000
+3️⃣ SNS広告動画（単発）¥50,000
+4️⃣ LINE月額保守 ¥50,000/月
+5️⃣ モニターセット ¥150,000"""
 
-🎬 会社紹介動画 ¥80,000
-https://buy.stripe.com/8x2cN73uBbPWd7gbEh9Zm00
+# ── サービス番号マッピング ────────────────────────────────────
+SERVICE_NUMBER_MAP = {
+    "1": "line_bot",
+    "2": "company_video",
+    "3": "sns_video",
+    "4": "maintenance",
+    "5": "monitor_set",
+}
 
-📱 SNS広告動画（単発）¥50,000
-https://buy.stripe.com/aFa001aX3g6c9V4aAd9Zm0a
+# ── サービス別決済リンク ──────────────────────────────────────
+PAYMENT_LINKS = {
+    "line_bot":      ("💬 LINEボット制作 ¥200,000",    "https://buy.stripe.com/dRm3cx0ip8DK4AK6jX9Zm02"),
+    "company_video": ("🎬 会社紹介動画 ¥80,000",        "https://buy.stripe.com/8x2cN73uBbPWd7gbEh9Zm00"),
+    "sns_video":     ("📱 SNS広告動画（単発）¥50,000",  "https://buy.stripe.com/aFa001aX3g6c9V4aAd9Zm0a"),
+    "maintenance":   ("🔧 LINE月額保守 ¥50,000/月",     "https://buy.stripe.com/cNi5kF8OVf284AKeQt9Zm0d"),
+    "monitor_set":   ("🎁 モニターセット ¥150,000",      "https://buy.stripe.com/bJeaEZ6GN9HOc3c0ZD9Zm0e"),
+}
 
-🔧 LINE月額保守 ¥50,000/月
-https://buy.stripe.com/cNi5kF8OVf284AKeQt9Zm0d
+# ── ヒアリング質問 ────────────────────────────────────────────
+HEARING_QUESTIONS = {
+    "company_video": [
+        "【会社紹介動画 ヒアリング①/7】\n会社名・業種を教えてください。",
+        "【会社紹介動画 ヒアリング②/7】\n動画で伝えたいメッセージを教えてください。\n（例：信頼感・実績・サービス紹介など）",
+        "【会社紹介動画 ヒアリング③/7】\nターゲットを教えてください。\n（誰に見せたいですか？）",
+        "【会社紹介動画 ヒアリング④/7】\n動画の長さをお選びください。\n・30秒\n・1分\n・2分",
+        "【会社紹介動画 ヒアリング⑤/7】\n使用したいキーワードや必ず入れたい言葉はありますか？",
+        "【会社紹介動画 ヒアリング⑥/7】\n参考にしたい動画・イメージがあれば教えてください。\n（なければ「なし」とご入力ください）",
+        "【会社紹介動画 ヒアリング⑦/7】\n納品希望日を教えてください。",
+    ],
+    "sns_video": [
+        "【SNS広告動画 ヒアリング①/7】\n会社名・業種を教えてください。",
+        "【SNS広告動画 ヒアリング②/7】\n宣伝したい商品・サービス名を教えてください。",
+        "【SNS広告動画 ヒアリング③/7】\nターゲットを教えてください。\n（年齢・性別・職業など）",
+        "【SNS広告動画 ヒアリング④/7】\n動画の長さをお選びください。\n・15秒\n・30秒\n・60秒",
+        "【SNS広告動画 ヒアリング⑤/7】\n訴求ポイントを教えてください。\n（例：価格・品質・限定など）",
+        "【SNS広告動画 ヒアリング⑥/7】\n投稿するSNSを教えてください。\n（Instagram・TikTok・X・YouTube）",
+        "【SNS広告動画 ヒアリング⑦/7】\n納品希望日を教えてください。",
+    ],
+}
 
-🎁 モニターセット ¥150,000
-https://buy.stripe.com/bJeaEZ6GN9HOc3c0ZD9Zm0e
+HEARING_LABELS = {
+    "company_video": [
+        "会社名・業種",
+        "伝えたいメッセージ",
+        "ターゲット",
+        "動画の長さ",
+        "キーワード・必須ワード",
+        "参考動画・イメージ",
+        "納品希望日",
+    ],
+    "sns_video": [
+        "会社名・業種",
+        "商品・サービス名",
+        "ターゲット",
+        "動画の長さ",
+        "訴求ポイント",
+        "投稿SNS",
+        "納品希望日",
+    ],
+}
 
-お支払い完了後、自動で確認メッセージをお送りします。"""
+SERVICE_NAMES = {
+    "line_bot":      "LINEボット制作",
+    "company_video": "会社紹介動画",
+    "sns_video":     "SNS広告動画",
+    "maintenance":   "LINE月額保守",
+    "monitor_set":   "モニターセット",
+}
 
+# ── DB モデル ─────────────────────────────────────────────────
 
-class PendingPayment(db.Model):
-    __tablename__ = "pending_payments"
-    id = db.Column(db.Integer, primary_key=True)
-    line_user_id = db.Column(db.String(64), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    notified = db.Column(db.Boolean, default=False)
+class UserSession(db.Model):
+    """ユーザーの会話セッション管理"""
+    __tablename__ = "user_sessions"
+    line_user_id  = db.Column(db.String(64), primary_key=True)
+    # idle / selecting_service / awaiting_payment / hearing / completed
+    state         = db.Column(db.String(32), default="idle", nullable=False)
+    service_type  = db.Column(db.String(32), nullable=True)
+    hearing_step  = db.Column(db.Integer, default=0)
+    # JSON: {"answers": ["回答1", "回答2", ...]}
+    hearing_data  = db.Column(db.Text, default="{}")
+    updated_at    = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 with app.app_context():
     db.create_all()
 
+
+# ── ヘルパー ──────────────────────────────────────────────────
+
+def get_or_create_session(line_user_id: str) -> UserSession:
+    session = db.session.get(UserSession, line_user_id)
+    if not session:
+        session = UserSession(line_user_id=line_user_id)
+        db.session.add(session)
+        db.session.commit()
+    return session
+
+
+def push_text(line_user_id: str, text: str):
+    with ApiClient(configuration) as api_client:
+        MessagingApi(api_client).push_message(
+            PushMessageRequest(
+                to=line_user_id,
+                messages=[TextMessage(text=text)],
+            )
+        )
+
+
+def reply_text(reply_token: str, text: str):
+    with ApiClient(configuration) as api_client:
+        MessagingApi(api_client).reply_message(
+            ReplyMessageRequest(
+                reply_token=reply_token,
+                messages=[TextMessage(text=text)],
+            )
+        )
+
+
+# ── LINE Webhook ──────────────────────────────────────────────
 
 @app.route("/callback", methods=["POST"])
 def callback():
@@ -98,39 +198,105 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
-    user_text = event.message.text.strip()
-    line_user_id = event.source.user_id
+    user_text     = event.message.text.strip()
+    line_user_id  = event.source.user_id
+    reply_token   = event.reply_token
+    sess          = get_or_create_session(line_user_id)
 
-    if any(kw in user_text for kw in PAYMENT_KEYWORDS):
-        # 決済リンク送付時にLINEユーザーIDを「支払い待ち」として保存
-        existing = PendingPayment.query.filter_by(
-            line_user_id=line_user_id, notified=False
-        ).first()
-        if not existing:
-            db.session.add(PendingPayment(line_user_id=line_user_id))
-            db.session.commit()
-        reply_text = PAYMENT_MENU
-
-    elif any(kw in user_text for kw in KEYWORDS):
-        # ガイドURLは送らず、サービス内容と料金のみ案内
-        reply_text = SERVICE_INFO
-
-    else:
+    # ── ヒアリング中：回答を受け付ける ────────────────────────
+    if sess.state == "hearing":
+        _handle_hearing_answer(sess, user_text, reply_token)
         return
 
-    with ApiClient(configuration) as api_client:
-        messaging_api = MessagingApi(api_client)
-        messaging_api.reply_message(
-            ReplyMessageRequest(
-                reply_token=event.reply_token,
-                messages=[TextMessage(text=reply_text)],
-            )
-        )
+    # ── サービス選択中：番号を受け付ける ──────────────────────
+    if sess.state == "selecting_service":
+        service_key = SERVICE_NUMBER_MAP.get(user_text)
+        if service_key:
+            label, url = PAYMENT_LINKS[service_key]
+            sess.service_type = service_key
+            sess.state        = "awaiting_payment"
+            sess.updated_at   = datetime.utcnow()
+            db.session.commit()
+            reply_text(reply_token, (
+                f"ありがとうございます！\n{label} の決済リンクをお送りします👇\n\n"
+                f"{url}\n\n"
+                "お支払い完了後、自動でご確認メッセージをお送りします。"
+            ))
+        else:
+            reply_text(reply_token, "1〜5の番号でお答えください。\n\n" + SERVICE_SELECT_MSG)
+        return
 
+    # ── 支払い待ち中：リマインド ───────────────────────────────
+    if sess.state == "awaiting_payment":
+        label, url = PAYMENT_LINKS.get(sess.service_type, ("", ""))
+        reply_text(reply_token, (
+            "お支払いの確認待ちです。\n"
+            "以下のリンクよりお手続きください👇\n\n"
+            f"{url}"
+        ))
+        return
+
+    # ── 通常キーワード処理 ────────────────────────────────────
+    if any(kw in user_text for kw in PAYMENT_KEYWORDS):
+        sess.state      = "selecting_service"
+        sess.updated_at = datetime.utcnow()
+        db.session.commit()
+        reply_text(reply_token, SERVICE_SELECT_MSG)
+
+    elif any(kw in user_text for kw in KEYWORDS):
+        reply_text(reply_token, SERVICE_INFO)
+
+
+def _handle_hearing_answer(sess: UserSession, answer: str, reply_token: str):
+    """ヒアリングの回答を保存し、次の質問または完了処理を行う"""
+    data    = json.loads(sess.hearing_data or "{}")
+    answers = data.get("answers", [])
+    answers.append(answer)
+    data["answers"]    = answers
+    sess.hearing_data  = json.dumps(data, ensure_ascii=False)
+    sess.hearing_step  = len(answers)
+    sess.updated_at    = datetime.utcnow()
+
+    questions = HEARING_QUESTIONS.get(sess.service_type, [])
+
+    if len(answers) < len(questions):
+        # 次の質問を送る
+        db.session.commit()
+        reply_text(reply_token, questions[len(answers)])
+    else:
+        # ヒアリング完了
+        sess.state     = "completed"
+        db.session.commit()
+        reply_text(reply_token,
+            "✅ ヒアリング完了しました！\n制作を開始します。\n\n"
+            "ご回答ありがとうございました。\n"
+            "担当者よりあらためてご連絡いたします。"
+        )
+        _forward_hearing_to_admin(sess, answers)
+
+
+def _forward_hearing_to_admin(sess: UserSession, answers: list):
+    """ヒアリング結果をエイデン管理者LINEに転送する"""
+    if not EIKO_LINE_USER_ID:
+        return
+
+    labels   = HEARING_LABELS.get(sess.service_type, [])
+    svc_name = SERVICE_NAMES.get(sess.service_type, sess.service_type)
+
+    lines = [f"📋【ヒアリング結果】{svc_name}", f"LINE ID: {sess.line_user_id}", ""]
+    for i, (label, ans) in enumerate(zip(labels, answers), 1):
+        lines.append(f"Q{i}. {label}")
+        lines.append(f"→ {ans}")
+        lines.append("")
+
+    push_text(EIKO_LINE_USER_ID, "\n".join(lines).strip())
+
+
+# ── Stripe Webhook ────────────────────────────────────────────
 
 @app.route("/stripe-webhook", methods=["POST"])
 def stripe_webhook():
-    payload = request.get_data(as_text=True)
+    payload    = request.get_data(as_text=True)
     sig_header = request.headers.get("Stripe-Signature", "")
 
     try:
@@ -141,38 +307,44 @@ def stripe_webhook():
         abort(400)
 
     if event["type"] == "checkout.session.completed":
-        _notify_paid_users()
+        _on_payment_completed()
 
     return "OK"
 
 
-def _notify_paid_users():
-    """入金確認済みの支払い待ちユーザー全員にLINEで通知する"""
-    pending = PendingPayment.query.filter_by(notified=False).all()
-    if not pending:
-        return
+def _on_payment_completed():
+    """入金確認後の処理：ガイドURL送付 + ヒアリング開始（対象サービスのみ）"""
+    pending = UserSession.query.filter_by(state="awaiting_payment").all()
+    for sess in pending:
+        try:
+            svc_name = SERVICE_NAMES.get(sess.service_type, "サービス")
+            push_text(sess.line_user_id, (
+                f"✅ 入金確認しました！\n"
+                f"【{svc_name}】の制作を開始します。\n\n"
+                f"詳細はガイドページをご確認ください👇\n{GUIDE_URL}"
+            ))
 
-    with ApiClient(configuration) as api_client:
-        messaging_api = MessagingApi(api_client)
-        for record in pending:
-            try:
-                messaging_api.push_message(
-                    PushMessageRequest(
-                        to=record.line_user_id,
-                        messages=[
-                            TextMessage(text=(
-                                "✅ 入金確認しました！\n"
-                                "制作を開始します。\n\n"
-                                "詳細はガイドページをご確認ください👇\n"
-                                f"{GUIDE_URL}"
-                            )),
-                        ],
-                    )
-                )
-                record.notified = True
-            except Exception:
-                pass
-    db.session.commit()
+            if sess.service_type in HEARING_QUESTIONS:
+                # ヒアリングが必要なサービス：最初の質問を送る
+                sess.state        = "hearing"
+                sess.hearing_step = 0
+                sess.hearing_data = json.dumps({"answers": []})
+                sess.updated_at   = datetime.utcnow()
+                db.session.commit()
+
+                first_q = HEARING_QUESTIONS[sess.service_type][0]
+                push_text(sess.line_user_id, (
+                    "制作に必要な情報をお伺いします。\n"
+                    "1問ずつご回答ください👇\n\n"
+                    + first_q
+                ))
+            else:
+                sess.state      = "completed"
+                sess.updated_at = datetime.utcnow()
+                db.session.commit()
+
+        except Exception:
+            pass
 
 
 if __name__ == "__main__":
