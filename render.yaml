@@ -17,9 +17,8 @@ services:
   - type: web
     name: aiden-linebot
     runtime: python
-    rootDir: line-bot
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn main:app
+    buildCommand: pip install -r line-bot/requirements.txt
+    startCommand: gunicorn --chdir line-bot main:app
     envVars:
       - key: LINE_CHANNEL_ACCESS_TOKEN
         sync: false
