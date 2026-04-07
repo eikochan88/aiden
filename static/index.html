@@ -191,11 +191,13 @@
       right: 24px;
       z-index: 9999;
       display: none;
-      animation: slideUp .5s cubic-bezier(.34,1.56,.64,1);
       max-width: 380px;
       width: calc(100vw - 32px);
     }
-    #avatar-popup.show { display: block; }
+    #avatar-popup.show {
+      display: block;
+      animation: slideUp .5s cubic-bezier(.34,1.56,.64,1);
+    }
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(40px) scale(.9); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -1240,14 +1242,11 @@
   const closeBtn = document.getElementById('avatar-close-btn');
 
   setTimeout(() => {
-    if (!sessionStorage.getItem('aichan_closed')) {
-      popup.classList.add('show');
-    }
+    popup.classList.add('show');
   }, 3000);
 
   closeBtn.addEventListener('click', () => {
     popup.classList.remove('show');
-    sessionStorage.setItem('aichan_closed', '1');
   });
 </script>
 </body>
