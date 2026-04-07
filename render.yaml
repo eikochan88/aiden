@@ -13,3 +13,21 @@ services:
         sync: false
       - key: EIKO_LINE_USER_ID
         sync: false
+
+  - type: web
+    name: aiden-linebot
+    runtime: python
+    rootDir: line-bot
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn main:app
+    envVars:
+      - key: LINE_CHANNEL_ACCESS_TOKEN
+        sync: false
+      - key: LINE_CHANNEL_SECRET
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: EIKO_LINE_USER_ID
+        sync: false
