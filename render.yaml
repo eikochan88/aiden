@@ -3,7 +3,7 @@ services:
     name: aiden-dashboard
     runtime: python
     pythonVersion: "3.11.9"
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && pip install -r line-bot/requirements.txt
     startCommand: gunicorn app:app
     envVars:
       - key: OPENAI_API_KEY
