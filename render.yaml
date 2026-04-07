@@ -2,6 +2,7 @@ services:
   - type: web
     name: aiden-dashboard
     runtime: python
+    pythonVersion: "3.11.9"
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
     envVars:
@@ -17,6 +18,7 @@ services:
   - type: web
     name: aiden-linebot
     runtime: python
+    pythonVersion: "3.11.9"
     buildCommand: pip install -r line-bot/requirements.txt
     startCommand: gunicorn --chdir line-bot main:app
     envVars:
