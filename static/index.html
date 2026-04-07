@@ -1240,14 +1240,14 @@
   const closeBtn = document.getElementById('avatar-close-btn');
 
   setTimeout(() => {
-    if (!sessionStorage.getItem('aoi_closed')) {
+    if (!sessionStorage.getItem('aichan_closed')) {
       popup.classList.add('show');
     }
   }, 3000);
 
   closeBtn.addEventListener('click', () => {
     popup.classList.remove('show');
-    sessionStorage.setItem('aoi_closed', '1');
+    sessionStorage.setItem('aichan_closed', '1');
   });
 </script>
 </body>
