@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 import stripe
 from flask import Flask, request, abort
 from flask_sqlalchemy import SQLAlchemy
@@ -13,8 +14,11 @@ from linebot.v3.messaging import (
     PushMessageRequest,
     TextMessage,
 )
-from linebot.v3.webhooks import MessageEvent, TextMessageContent
+from linebot.v3.webhooks import MessageEvent, TextMessageContent, FollowEvent
 from datetime import datetime
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///linebot.db")
@@ -30,15 +34,66 @@ EIKO_LINE_USER_ID = os.environ.get("EIKO_LINE_USER_ID", "")
 GUIDE_URL = "https://aiden-1e0e.onrender.com/guide"
 
 # ── キーワード ──────────────────────────────────────────────────
-KEYWORDS        = ["サービス詳細", "料金", "メニュー", "こんにちは", "はじめまして"]
+KEYWORDS         = ["サービス詳細", "料金", "メニュー", "こんにちは", "はじめまして", "申し込み", "お願いします"]
 PAYMENT_KEYWORDS = ["申し込む", "決済", "支払い"]
 SAMPLE_KEYWORDS  = ["サンプル", "事例", "実績", "どんな動画"]
+GUIDE_KEYWORDS   = ["会社紹介動画", "詳細", "サービス", "動画", "何ができる", "どんなサービス", "紹介"]
 
 SAMPLE_COMPANY_URL = "https://aiden-1e0e.onrender.com/guide/video-company"
 SAMPLE_SNS_URL     = "https://aiden-1e0e.onrender.com/guide/video-sns"
 
+# ── ウェルカムメッセージ ──────────────────────────────────────
+WELCOME_MSG = f"""はじめまして！エイデンです🎉
+
+動画制作・LINEボット・キャッシュレス決済など、
+中小企業のDXをトータルサポートします✨
+
+📄 サービス詳細はこちら👇
+{GUIDE_URL}
+
+以下のキーワードでお気軽にご相談ください😊
+・「サービス」→ サービス一覧
+・「サンプル」→ 動画サンプル
+・「料金」→ 料金案内"""
+
+# ── サービス紹介メッセージ（ガイドURL付き）────────────────────
+GUIDE_INFO_MSG = f"""エイデンでは以下のサービスを提供しています✨
+
+🎬 会社紹介動画 ¥80,000
+　企業の魅力をプロの映像でお届けします。
+
+📱 SNS広告動画 ¥50,000〜
+　Instagram・TikTok向けの広告動画を制作。
+
+💬 LINEボット制作 ¥200,000
+　24時間対応のLINEボットを構築します。
+
+💳 キャッシュレス決済導入 ¥50,000
+　スマートな決済環境をご提供。
+
+🎁 モニター限定セット ¥150,000
+　お得なセットプランです。
+
+📄 サービス詳細はこちら👇
+{GUIDE_URL}
+
+お申し込みは「サービス詳細」と送ってください😊"""
+
+# ── フォールバックメッセージ ──────────────────────────────────
+FALLBACK_MSG = f"""メッセージありがとうございます😊
+
+以下のキーワードでお気軽にご相談ください：
+
+・「サービス」→ サービス・料金案内
+・「サンプル」→ 動画サンプル
+・「料金」→ 料金一覧
+・「申し込む」→ お申し込み手続き
+
+📄 サービスガイドはこちら👇
+{GUIDE_URL}"""
+
 # ── サービス選択メッセージ ────────────────────────────────────
-SERVICE_SELECT_MSG = """どのサービスにご興味がありますか？
+SERVICE_SELECT_MSG = f"""どのサービスにご興味がありますか？
 
 1️⃣ LINEボット制作 ¥200,000
 2️⃣ 会社紹介動画 ¥80,000
@@ -47,7 +102,10 @@ SERVICE_SELECT_MSG = """どのサービスにご興味がありますか？
 5️⃣ モニター限定セット ¥150,000
 6️⃣ その他・相談したい
 
-番号を送ってください😊"""
+番号を送ってください😊
+
+📄 詳しくはガイドページ👇
+{GUIDE_URL}"""
 
 # ── サービス番号マッピング ────────────────────────────────────
 SERVICE_NUMBER_MAP = {
@@ -332,47 +390,87 @@ def callback():
     return "OK"
 
 
+@handler.add(FollowEvent)
+def handle_follow(event):
+    """友だち追加・ブロック解除時のウェルカムメッセージ"""
+    try:
+        line_user_id = event.source.user_id
+        reply_token  = event.reply_token
+        # セッションをリセットして歓迎
+        sess = get_or_create_session(line_user_id)
+        sess.state        = "idle"
+        sess.service_type = None
+        sess.hearing_step = 0
+        sess.hearing_data = "{}"
+        sess.updated_at   = datetime.utcnow()
+        db.session.commit()
+        reply_text(reply_token, WELCOME_MSG)
+    except Exception:
+        logger.exception("handle_follow error")
+
+
 @handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
     user_text    = event.message.text.strip()
     line_user_id = event.source.user_id
     reply_token  = event.reply_token
-    sess         = get_or_create_session(line_user_id)
 
-    # ── ヒアリング中：回答を受け付ける ────────────────────────
-    if sess.state == "hearing":
-        _handle_hearing_answer(sess, user_text, reply_token)
+    try:
+        sess = get_or_create_session(line_user_id)
+    except Exception:
+        logger.exception("DB error in get_or_create_session")
+        reply_text(reply_token, "一時的なエラーが発生しました。少し時間をおいて再度お試しください🙏")
         return
 
-    # ── サービス選択中：番号を受け付ける ──────────────────────
-    if sess.state == "selecting_service":
-        _handle_service_selection(sess, user_text, reply_token)
-        return
+    try:
+        # ── ヒアリング中：回答を受け付ける ────────────────────────
+        if sess.state == "hearing":
+            _handle_hearing_answer(sess, user_text, reply_token)
+            return
 
-    # ── 支払い待ち中：リマインド ───────────────────────────────
-    if sess.state == "awaiting_payment":
-        _, url = PAYMENT_LINKS.get(sess.service_type, ("", ""))
-        reply_text(reply_token, (
-            "お支払いの確認待ちです。\n"
-            "以下のリンクよりお手続きください👇\n\n"
-            f"{url}"
-        ))
-        return
+        # ── サービス選択中：番号を受け付ける ──────────────────────
+        if sess.state == "selecting_service":
+            _handle_service_selection(sess, user_text, reply_token)
+            return
 
-    # ── 通常キーワード処理 ────────────────────────────────────
-    if any(kw in user_text for kw in PAYMENT_KEYWORDS) or any(kw in user_text for kw in KEYWORDS):
-        sess.state      = "selecting_service"
-        sess.updated_at = datetime.utcnow()
-        db.session.commit()
-        reply_text(reply_token, SERVICE_SELECT_MSG)
+        # ── 支払い待ち中：リマインド ───────────────────────────────
+        if sess.state == "awaiting_payment":
+            _, url = PAYMENT_LINKS.get(sess.service_type, ("", ""))
+            reply_text(reply_token, (
+                "お支払いの確認待ちです。\n"
+                "以下のリンクよりお手続きください👇\n\n"
+                f"{url}"
+            ))
+            return
 
-    elif any(kw in user_text for kw in SAMPLE_KEYWORDS):
-        reply_text(reply_token, (
-            "サンプル動画はこちらからご覧いただけます👇\n"
-            "（ストリーミング再生のみ対応）\n\n"
-            f"🎬 会社紹介動画\n{SAMPLE_COMPANY_URL}\n\n"
-            f"📱 SNS広告動画\n{SAMPLE_SNS_URL}"
-        ))
+        # ── 通常キーワード処理 ────────────────────────────────────
+        if any(kw in user_text for kw in PAYMENT_KEYWORDS) or any(kw in user_text for kw in KEYWORDS):
+            sess.state      = "selecting_service"
+            sess.updated_at = datetime.utcnow()
+            db.session.commit()
+            reply_text(reply_token, SERVICE_SELECT_MSG)
+
+        elif any(kw in user_text for kw in GUIDE_KEYWORDS):
+            reply_text(reply_token, GUIDE_INFO_MSG)
+
+        elif any(kw in user_text for kw in SAMPLE_KEYWORDS):
+            reply_text(reply_token, (
+                "サンプル動画はこちらからご覧いただけます👇\n"
+                "（ストリーミング再生のみ対応）\n\n"
+                f"🎬 会社紹介動画\n{SAMPLE_COMPANY_URL}\n\n"
+                f"📱 SNS広告動画\n{SAMPLE_SNS_URL}"
+            ))
+
+        else:
+            # どのキーワードにも一致しない場合のフォールバック
+            reply_text(reply_token, FALLBACK_MSG)
+
+    except Exception:
+        logger.exception("handle_message error (user_id=%s)", line_user_id)
+        try:
+            reply_text(reply_token, "エラーが発生しました。少し時間をおいて再度お試しください🙏")
+        except Exception:
+            pass
 
 
 def _handle_service_selection(sess: UserSession, user_text: str, reply_token: str):
@@ -522,7 +620,7 @@ def _on_payment_completed():
                 db.session.commit()
 
         except Exception:
-            pass
+            logger.exception("_on_payment_completed error (user_id=%s)", sess.line_user_id)
 
 
 if __name__ == "__main__":
