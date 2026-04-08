@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>エイデン×新規HP制作 お客様準備手順書 | Aiden</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    body { background: #f4f6f9; font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif; }
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .hero .badge-label {
+      display: inline-block;
+      background: #00B900;
+      color: white;
+      font-size: .75rem;
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+      letter-spacing: .05em;
+    }
+    .hero h1 { font-size: 1.5rem; font-weight: bold; margin-bottom: 8px; }
+    .hero p { opacity: .75; font-size: .95rem; margin: 0; }
+
+    .card-guide {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    }
+
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 1rem;
+      flex-shrink: 0;
+      margin-right: 12px;
+    }
+    .step-1 { background: #1a1a2e; color: white; }
+    .step-2 { background: #00B900; color: white; }
+    .step-3 { background: #0d6efd; color: white; }
+
+    .step-header { display: flex; align-items: center; margin-bottom: 16px; }
+    .step-header h5 { margin: 0; font-weight: bold; font-size: 1rem; }
+
+    .item-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .item-row:last-child { border-bottom: none; }
+    .item-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+    .item-text { font-size: .93rem; line-height: 1.6; }
+    .item-sub { font-size: .82rem; color: #666; margin-top: 2px; }
+
+    .memo-box {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: .88rem;
+      color: #555;
+      margin-top: 12px;
+      border-left: 4px solid #1a1a2e;
+    }
+
+    .tip-box {
+      background: #f0fff4;
+      border-left: 4px solid #00B900;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: .88rem;
+      color: #333;
+      margin-top: 12px;
+    }
+
+    /* サーバー比較表 */
+    .server-table th {
+      background: #1a1a2e;
+      color: white;
+      font-size: .85rem;
+      font-weight: 600;
+      padding: 10px 12px;
+    }
+    .server-table td {
+      font-size: .88rem;
+      padding: 10px 12px;
+      vertical-align: middle;
+    }
+    .server-table tr:nth-child(even) td { background: #f8f9fa; }
+    .price-badge {
+      display: inline-block;
+      background: #00B900;
+      color: white;
+      font-size: .78rem;
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .line-cta {
+      background: linear-gradient(135deg, #00B900, #059142);
+      color: white;
+      border-radius: 14px;
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .line-cta h5 { font-weight: bold; margin-bottom: 6px; }
+    .line-cta .line-id {
+      display: inline-block;
+      background: rgba(255,255,255,.2);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      letter-spacing: .05em;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge-label">新規HP制作</div>
+  <h1>エイデン×新規HP制作<br>お客様準備手順書</h1>
+  <p>このページの手順通りに進めるだけでOKです😊</p>
+</div>
+
+<div class="container py-4" style="max-width:680px">
+
+  <!-- サーバー比較表 -->
+  <div class="card-guide">
+    <h5 class="fw-bold mb-3"><i class="bi bi-server me-2" style="color:#1a1a2e"></i>おすすめサーバー比較</h5>
+    <div class="table-responsive">
+      <table class="table table-bordered server-table mb-2">
+        <thead>
+          <tr>
+            <th>サーバー名</th>
+            <th>月額</th>
+            <th>特徴</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>エックスサーバー</strong></td>
+            <td><span class="price-badge">¥990〜</span></td>
+            <td>国内シェアNo.1・安定性抜群・サポート充実</td>
+          </tr>
+          <tr>
+            <td><strong>ConoHa WING</strong></td>
+            <td><span class="price-badge">¥660〜</span></td>
+            <td>管理画面が簡単・WordPressインストールが超簡単・キャンペーン多い</td>
+          </tr>
+          <tr>
+            <td><strong>さくらサーバー</strong></td>
+            <td><span class="price-badge">¥425〜</span></td>
+            <td>老舗で安心・価格が安い・シンプルな管理画面</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip-box">
+      <i class="bi bi-chat-dots-fill me-2" style="color:#00B900"></i>
+      上記以外のサーバーでも対応可能です。ご不明な場合はLINEでご相談ください😊
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="card-guide">
+    <div class="step-header">
+      <span class="step-badge step-1">1</span>
+      <h5>お好きなサーバーを選んで契約</h5>
+    </div>
+    <div class="item-row">
+      <span class="item-icon">📋</span>
+      <div class="item-text">
+        上記の比較表を参考にサーバーを選ぶ
+        <div class="item-sub">迷ったら ConoHa WING がおすすめです</div>
+      </div>
+    </div>
+    <div class="item-row">
+      <span class="item-icon">💳</span>
+      <div class="item-text">
+        自分のクレジットカードで契約する
+        <div class="item-sub">月額または年払いを選択できます</div>
+      </div>
+    </div>
+    <div class="item-row">
+      <span class="item-icon">📝</span>
+      <div class="item-text">
+        ログインIDとパスワードをメモする
+      </div>
+    </div>
+    <div class="memo-box">
+      <i class="bi bi-pencil-fill me-2"></i><strong>メモしておくもの</strong><br>
+      サーバーのログインID・パスワード
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="card-guide">
+    <div class="step-header">
+      <span class="step-badge step-2">2</span>
+      <h5>ドメイン取得（お名前.com推奨）</h5>
+    </div>
+    <div class="item-row">
+      <span class="item-icon">🔍</span>
+      <div class="item-text">
+        希望のドメイン名を検索する
+        <div class="item-sub">例：yourcompany.com / yourcompany.co.jp</div>
+      </div>
+    </div>
+    <div class="item-row">
+      <span class="item-icon">🛒</span>
+      <div class="item-text">
+        年間 ¥1,000〜¥3,000 で取得する
+        <div class="item-sub">.com や .jp が一般的です</div>
+      </div>
+    </div>
+    <div class="item-row">
+      <span class="item-icon">📝</span>
+      <div class="item-text">
+        ログインIDとパスワードをメモする
+      </div>
+    </div>
+    <div class="memo-box">
+      <i class="bi bi-pencil-fill me-2"></i><strong>メモしておくもの</strong><br>
+      ドメインのログインID・パスワード
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="card-guide">
+    <div class="step-header">
+      <span class="step-badge step-3">3</span>
+      <h5>LINEで情報を共有する</h5>
+    </div>
+    <div class="item-row">
+      <span class="item-icon">🖥️</span>
+      <div class="item-text">サーバーのログインID・パスワードを送る</div>
+    </div>
+    <div class="item-row">
+      <span class="item-icon">🌐</span>
+      <div class="item-text">ドメインのログインID・パスワードを送る</div>
+    </div>
+    <div class="item-row">
+      <span class="item-icon">💬</span>
+      <div class="item-text">
+        「準備できました！」とLINEに送る
+      </div>
+    </div>
+    <div class="tip-box">
+      <i class="bi bi-stars me-2" style="color:#00B900"></i>
+      <strong>あとはエイデンが全部やります😊</strong><br>
+      設定・構築・確認まですべておまかせください！
+    </div>
+  </div>
+
+  <!-- LINE CTA -->
+  <div class="line-cta mb-4">
+    <h5><i class="bi bi-line me-2"></i>準備ができたらLINEへ！</h5>
+    <p style="font-size:.9rem; opacity:.9; margin-bottom:8px">「準備できました！」と送ってください</p>
+    <div class="line-id">LINE ID：@474pqexj</div>
+  </div>
+
+</div>
+</body>
+</html>
