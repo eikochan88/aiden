@@ -203,19 +203,6 @@ HEARING_FLOW = {
             "options": ["15秒", "30秒", "60秒"],
         },
         {
-            "type": "select",
-            "label": "投稿SNS",
-            "text": (
-                "投稿するSNSはどれですか？\n\n"
-                "1️⃣ Instagram\n"
-                "2️⃣ TikTok\n"
-                "3️⃣ X（旧Twitter）\n"
-                "4️⃣ YouTube\n\n"
-                "番号を送ってください😊"
-            ),
-            "options": ["Instagram", "TikTok", "X（旧Twitter）", "YouTube"],
-        },
-        {
             "type": "free",
             "label": "HP・SNS URL",
             "text": "会社のHPのURLを教えてください🌐\n（なければSNSのURLでもOKです）",
@@ -549,7 +536,7 @@ def _handle_hearing_answer(sess: UserSession, answer: str, reply_token: str):
         reply_text(reply_token,
             "✅ ヒアリング完了しました！\n制作を開始します🎬\n\n"
             "ご協力ありがとうございました。\n"
-            "担当者よりあらためてご連絡いたします😊"
+            "エイデンよりあらためてご連絡いたします😊"
         )
         _forward_hearing_to_admin(sess, answers)
 
