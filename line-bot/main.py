@@ -479,6 +479,7 @@ def _handle_service_selection(sess: UserSession, user_text: str, reply_token: st
         return
 
     label, url = PAYMENT_LINKS[service_key]
+    svc_name = SERVICE_NAMES.get(service_key, service_key)
     sess.service_type = service_key
     sess.state        = "awaiting_payment"
     sess.updated_at   = datetime.utcnow()
@@ -489,6 +490,10 @@ def _handle_service_selection(sess: UserSession, user_text: str, reply_token: st
         f"{url}\n\n"
         "お支払い完了後、自動でご確認メッセージをお送りします✅"
     ))
+    if EIKO_LINE_USER_ID:
+        push_text(EIKO_LINE_USER_ID,
+            f"【新規注文】\nサービス：{svc_name}\nお客様ID：{sess.line_user_id}"
+        )
 
 
 def _handle_hearing_answer(sess: UserSession, answer: str, reply_token: str):
@@ -546,14 +551,9 @@ def _forward_hearing_to_admin(sess: UserSession, answers: list):
     if not EIKO_LINE_USER_ID:
         return
 
-    svc_name = SERVICE_NAMES.get(sess.service_type, sess.service_type)
-    lines = [f"📋【ヒアリング結果】{svc_name}", f"LINE ID: {sess.line_user_id}", ""]
-    for i, item in enumerate(answers, 1):
-        lines.append(f"Q{i}. {item['label']}")
-        lines.append(f"→ {item['value']}")
-        lines.append("")
-
-    push_text(EIKO_LINE_USER_ID, "\n".join(lines).strip())
+    push_text(EIKO_LINE_USER_ID,
+        f"【ヒアリング完了】\nお客様ID：{sess.line_user_id}のヒアリングが完了しました"
+    )
 
 
 # ── Stripe Webhook ────────────────────────────────────────────
@@ -571,13 +571,20 @@ def stripe_webhook():
         abort(400)
 
     if event["type"] == "checkout.session.completed":
-        _on_payment_completed()
+        stripe_session = event["data"]["object"]
+        amount = stripe_session.get("amount_total", 0)
+        _on_payment_completed(amount)
 
     return "OK"
 
 
-def _on_payment_completed():
+def _on_payment_completed(amount: int = 0):
     """入金確認後の処理：ガイドURL送付 + ヒアリング開始（対象サービスのみ）"""
+    if EIKO_LINE_USER_ID:
+        push_text(EIKO_LINE_USER_ID,
+            f"【入金確認】\n{amount:,}円の入金を確認しました"
+        )
+
     pending = UserSession.query.filter_by(state="awaiting_payment").all()
     for sess in pending:
         try:
